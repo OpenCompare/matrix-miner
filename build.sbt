@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   "org.webjars" % "ui-grid" % "3.0.0-rc.21",
   "org.kevoree.modeling" % "org.kevoree.modeling.microframework" % "3.5.12",
   "com.opencsv" % "opencsv" % "3.3",
+  "org.webjars" % "angular-highlightjs" % "0.3.2-1",
   jdbc,
   cache,
   ws,
