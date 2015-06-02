@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" ng-app="matrixMinerApp">
     <head>
         <title>Matrix Miner</title>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
@@ -21,6 +21,12 @@
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("angular.min.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-grid.js"))'></script>
+
+        <script>
+            var matrixMinerApp = angular.module("matrixMinerApp", ['ui.grid', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.cellNav', 'ui.grid.moveColumns', 'ui.grid.resizeColumns']);
+        </script>
+
+        <script type='text/javascript' src="@routes.Assets.versioned("javascripts/overview-controller.js")"></script>
 
     </body>
 </html>
