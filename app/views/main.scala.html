@@ -1,15 +1,26 @@
-@(title: String)(content: Html)
+@(content: Html)
 
 <!DOCTYPE html>
 
 <html lang="en">
     <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <title>Matrix Miner</title>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-        <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
+
+        <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))'>
+        <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))'>
+        <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("ui-grid.min.css"))'>
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
     </head>
     <body>
+
         @content
+
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("angular.min.js"))'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-grid.js"))'></script>
+
     </body>
 </html>

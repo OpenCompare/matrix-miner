@@ -7,6 +7,11 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
+  "org.webjars" %% "webjars-play" % "2.4.0-1",
+  "org.webjars" % "bootstrap" % "3.2.0",
+  "org.webjars" % "angularjs" % "1.4.0",
+  "org.webjars" % "font-awesome" % "4.3.0-1",
+  "org.webjars" % "ui-grid" % "3.0.0-rc.21",
   jdbc,
   cache,
   ws,
