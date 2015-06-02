@@ -38,6 +38,11 @@ class Application extends Controller {
 
   def category(fileRoot: String) = Action {
 
+/*   val fileName = fileRoot match {
+    case Some (f) => f
+    case None => ""
+   } */
+
     val fileLocation = workspaceDir + fileRoot
 
     val files = play.api.Play.getFile(fileLocation).listFiles()
@@ -48,7 +53,16 @@ class Application extends Controller {
     Ok(Json.toJson(Map("subcats" -> r)))
   }
 
+def categoryRoot() = Action {
 
+    val fileLocation = workspaceDir 
+
+    val files = play.api.Play.getFile(fileLocation).listFiles()
+      .filter(f => f.isDirectory)
+
+    val r = for (d <- files) yield d.getName
+    Ok(Json.toJson(Map("subcats" -> r)))
+  }
 
 
   def _fileListToJSON(file : io.File) : JsValue  = {

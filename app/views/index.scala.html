@@ -13,15 +13,15 @@
 
         </div>
 
-        <div ng-controller="OverviewController">
-            <a ng-click="upd('');"> > </a>
-            <p id="category"> > {{category}}</p>
+	<div ng-controller="PCMListController">
+            <p><a id="category" ng-click='updRoot("");'>{{category}}</a></p>
             <ul ng-repeat="subcategory in subcategories">
-                <li ng-click="upd(subcategory);">{{subcategory}}</li>
+                <li ng-click="upd(category, subcategory);">{{subcategory}}</li>
             </ul>
+        </div>
 
 
-
+        <div ng-controller="OverviewController">
             {{message}}
             <p ng-repeat="overview in overviews">
                 {{overview}}
