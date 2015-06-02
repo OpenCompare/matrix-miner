@@ -62,7 +62,7 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
 
 
     // Load PCM
-    $http.get("/pcm/toto").success(function (data) {
+    $http.post("/load", {}).success(function (data) {
         $scope.pcm = loader.loadModelFromString(JSON.stringify(data)).get(0);
         initializeEditor($scope.pcm)
     });

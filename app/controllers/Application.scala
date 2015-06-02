@@ -11,9 +11,10 @@ import collection.JavaConversions._
 
 class Application extends Controller {
 
-  val factory = new PCMFactoryImpl
   val datasetDir = "datasets/"
-
+  val factory = new PCMFactoryImpl
+  val csvOverviewLoader = new CSVLoader(factory, ';', '"', false)
+  val jsonExporter = new KMFJSONExporter
 
   def index = Action {
 
@@ -22,7 +23,6 @@ class Application extends Controller {
   }
 
   def list() = Action { request =>
-    println("request")
     val parameters = request.body.asJson.get.asInstanceOf[JsObject]
 
 
@@ -62,11 +62,19 @@ class Application extends Controller {
     Play.getFile(path).listFiles().filter(_.isDirectory).map(_.getName).toList
   }
 
-  def getPCM(id : String) = Action {
-    val csvOverviewLoader = new CSVLoader(factory, ';', '"', false)
+  def load() = Action { request =>
+    val parameters = request.body.asJson.get.asInstanceOf[JsObject]
+
+
+    val selectedDataset = (parameters \ "dataset").toOption
+    val selectedCategory = (parameters \ "category").toOption
+    val selectedFilter = (parameters \ "filter").toOption
+    val selectedPCM = (parameters \ "pcm").toOption
+
     val pcm = csvOverviewLoader.load(Play.getFile(datasetDir + "clustering-dataset/All Printers/cluster_8/finalPCM.csv"))
-    val jsonExporter = new KMFJSONExporter
     val json = jsonExporter.export(pcm)
+
     Ok(Json.parse(json))
   }
+
 }
