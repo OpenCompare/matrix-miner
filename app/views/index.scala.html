@@ -5,6 +5,7 @@
         <h1>Matrix Miner</h1>
 
 
+
         <div id="editor" ng-controller="PCMEditorController">
 
             <div id="matrix" class="row" ui-grid="gridOptions" ui-grid-selection ui-grid-edit ui-grid-cellNav ui-grid-move-columns ui-grid-resize-columns>
@@ -12,13 +13,25 @@
 
         </div>
 
+	<div ng-controller="PCMListController">
+            <p><a id="category" ng-click='updRoot("");'>{{category}}</a></p>
+            <ul ng-repeat="subcategory in subcategories">
+                <li ng-click="upd(category, subcategory);">{{subcategory}}</li>
+            </ul>
+        </div>
+
+
+
         <div ng-controller="OverviewController">
-            {{message}}
             <p ng-repeat="overview in overviews">
-                {{overview}}
             </p>
+
+            <div highlight="text" keywords="keywords" highlight-class="highlight">
+
+            </div>
         </div>
     </div>
+
 
 
 }
