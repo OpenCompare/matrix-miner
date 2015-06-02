@@ -5,13 +5,23 @@
         <h1>Matrix Miner</h1>
 
 
+
         <div ng-controller="OverviewController">
+            <a ng-click="upd('');"> > </a>
+            <p id="category"> > {{category}}</p>
+            <ul ng-repeat="subcategory in subcategories">
+                <li ng-click="upd(subcategory);">{{subcategory}}</li>
+            </ul>
+
+
+
             {{message}}
             <p ng-repeat="overview in overviews">
                 {{overview}}
             </p>
         </div>
     </div>
+
 
 
 }
