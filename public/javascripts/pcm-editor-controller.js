@@ -54,42 +54,12 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
         });
     };
 
-    if (typeof id === 'undefined' && typeof data === 'undefined') {
-        // Create example PCM
-        $scope.pcm = factory.createPCM();
-        /* var exampleFeature = factory.createFeature();
-        exampleFeature.name = "Feature";
-        $scope.pcm.addFeatures(exampleFeature);
 
-        var exampleFeature1 = factory.createFeature();
-        exampleFeature1.name = "Feature1";
-        $scope.pcm.addFeatures(exampleFeature1);
-
-        var exampleProduct = factory.createProduct();
-        exampleProduct.name = "Product";
-        $scope.pcm.addProducts(exampleProduct);
-
-        var exampleCell = factory.createCell();
-        exampleCell.feature = exampleFeature;
-        exampleCell.content = "Yes";
-        exampleProduct.addValues(exampleCell);
-
-        var exampleCell1 = factory.createCell();
-        exampleCell1.feature = exampleFeature1;
-        exampleCell1.content = "No";
-        exampleProduct.addValues(exampleCell1);*/
+    // Load PCM
+    $http.get("/pcm/toto").success(function (data) {
+        $scope.pcm = loader.loadModelFromString(JSON.stringify(data)).get(0);
         initializeEditor($scope.pcm)
-
-    } else if (typeof data != 'undefined')  {
-        $scope.pcm = loader.loadModelFromString(data).get(0);
-        initializeEditor($scope.pcm)
-
-    } else {
-        $http.get("/api/get/" + id).success(function (data) {
-            $scope.pcm = loader.loadModelFromString(JSON.stringify(data)).get(0);
-            initializeEditor($scope.pcm)
-        });
-    }
+    });
 
     function newColumnDef(featureName, featureType) {
         if(!featureType) {

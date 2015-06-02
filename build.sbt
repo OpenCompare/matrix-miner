@@ -12,6 +12,8 @@ libraryDependencies ++= Seq(
   "org.webjars" % "angularjs" % "1.4.0",
   "org.webjars" % "font-awesome" % "4.3.0-1",
   "org.webjars" % "ui-grid" % "3.0.0-rc.21",
+  "org.kevoree.modeling" % "org.kevoree.modeling.microframework" % "3.5.12",
+  "com.opencsv" % "opencsv" % "3.3",
   jdbc,
   cache,
   ws,
