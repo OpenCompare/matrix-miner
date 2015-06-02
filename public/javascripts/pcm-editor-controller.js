@@ -3,7 +3,7 @@
  */
 
 
-matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $http, $timeout, uiGridConstants) {
+matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $http, $timeout, uiGridConstants, $log) {
 
     // Load PCM
     var pcmMM = Kotlin.modules['pcm'].pcm;
@@ -52,6 +52,13 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
                 $rootScope.$broadcast('modified');
             }
         });
+        gridApi.cellNav.on.navigate($scope,function(newRowCol, oldRowCol){
+            $log.log('navigation event');
+            $log.log(newRowCol);
+            $log.log(newRowCol.col.name);
+            $log.log(newRowCol.row.entity.name);
+            $log.log(newRowCol.row.entity[newRowCol.col.name]);
+        });
     };
 
 
@@ -68,7 +75,8 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
         columnsType[featureName] = featureType;
         var columnDef = {
             name: featureName,
-            enableCellEdit: true,
+            width: "100",
+            enableCellEdit: false,
             enableSorting: true,
             enableHiding: false,
             menuItems: [
@@ -252,10 +260,11 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
         columnDefs.push({
             name: 'Product',
             field: "name",
+            width: "100",
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 return 'productCell';
             },
-            enableCellEdit: true,
+            enableCellEdit: false,
             enableSorting: true,
             enableHiding: true,
             enableColumnMoving: false
