@@ -24,6 +24,8 @@ matrixMinerApp.controller("OverviewController", function($rootScope, $scope, $ht
 
     $scope.$on('selection', function(event, product, feature, cell) {
         console.log(product + ", " + feature + " : " + cell);
+        $scope.keywords = feature + ", " + cell;
     });
 
+    $scope.text = "sample text : YES";
 });
