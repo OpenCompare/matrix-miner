@@ -3,17 +3,32 @@ package controllers
 import java.io.File
 
 
-import controllers.PCMCatalog._
+import java.io
+
+import org.opencompare.api.java.impl.io.KMFJSONExporter
+
+import collection.JavaConversions._
+
+import org.opencompare.api.java.PCM
+import org.opencompare.api.java.impl.PCMFactoryImpl
+import org.opencompare.api.java.io.CSVLoader
+
 import play.api._
 import play.api.libs.json._
 import play.api.mvc._
 
 import play.api.Play.current
 
+
+
+import scala.reflect.io.File
+
 class Application extends Controller {
 
+  val factory = new PCMFactoryImpl
+  val datasetDir = "datasets/"
+  val workspaceDir = "datasets/"
 
-  val workspaceDir = "dataset-best-buy/manual-dataset/"
 
   def index = Action {
 
@@ -21,13 +36,9 @@ class Application extends Controller {
     //Ok(views.html.index(">"))
   }
 
-  def category(fileRoot: Option[String]) = Action {
-    val f =  fileRoot match {
-      case Some(fileRoot) => fileRoot
-      case None => ""
-    }
+  def category(fileRoot: String) = Action {
 
-    val fileLocation = workspaceDir + f.toString
+    val fileLocation = workspaceDir + fileRoot
 
     val files = play.api.Play.getFile(fileLocation).listFiles()
       .filter(f => f.isDirectory)
@@ -40,7 +51,7 @@ class Application extends Controller {
 
 
 
-  def _fileListToJSON(file : File) : JsValue  = {
+  def _fileListToJSON(file : io.File) : JsValue  = {
     if (!file.isDirectory()) {
       if (""".*\.fml$""".r.findFirstIn(file.getName).isDefined ||
         """.*\.dimacs$""".r.findFirstIn(file.getName).isDefined
@@ -84,15 +95,22 @@ class Application extends Controller {
 
   // print the parent directory name if the parent directory is not the root of the workspace (relative)
   // FIXME
-  def mkProperName(f : File) = {
+  def mkProperName(f : io.File) = {
     f.getAbsolutePath // .replaceFirst(workspaceDir, "")
   }
 
-  def recursiveListFiles(f: File): Array[File] = {
+  def recursiveListFiles(f: io.File): Array[io.File] = {
     val these = f.listFiles
     these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
   }
 
 
 
+  def getPCM(id : String) = Action {
+    val csvOverviewLoader = new CSVLoader(factory, ';', '"', false)
+    val pcm = csvOverviewLoader.load(new io.File(datasetDir + "clustering-dataset/All Printers/cluster_8/finalPCM.csv"))
+    val jsonExporter = new KMFJSONExporter
+    val json = jsonExporter.export(pcm)
+    Ok(Json.parse(json))
+  }
 }

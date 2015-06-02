@@ -21,4 +21,9 @@ matrixMinerApp.controller("OverviewController", function($rootScope, $scope, $ht
                 $scope.subcategories = data['subcats'];
             });
     }
+
+    $scope.$on('selection', function(event, product, feature, cell) {
+        console.log(product + ", " + feature + " : " + cell);
+    });
+
 });
