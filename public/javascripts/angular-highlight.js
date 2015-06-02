@@ -17,7 +17,7 @@ angular.module('angular-highlight', []).directive('highlight', function() {
 			}
 			return keywords_yop;
 		}
-		
+
 		scope.$watch('keywords', function() {
 			//console.log("scope.keywords",scope.keywords);
 			if (!scope.keywords || scope.keywords == '') {
