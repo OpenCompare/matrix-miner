@@ -104,32 +104,6 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
                             }
                         });
                     }
-                },
-                {
-                    title: 'Rename Feature',
-                    icon: 'fa fa-pencil',
-                    action: function($event) {
-                        $('#modalRenameFeature').modal('show');
-                        $scope.oldFeatureName = featureName;
-                        $scope.featureName = featureName;
-                    }
-                },
-                {
-                    title: 'Change Type',
-                    icon: 'fa fa-pencil',
-                    action: function($event) {
-                        $('#modalChangeType').modal('show');
-                        $scope.oldFeatureName = featureName;
-                        $scope.featureName = featureName;
-                        $scope.featureType = columnsType[featureName];
-                    }
-                },
-                {
-                    title: 'Delete Feature',
-                    icon: 'fa fa-trash-o',
-                    action: function($event) {
-                        $scope.deleteFeature(featureName);
-                    }
                 }
             ],
             cellClass: function(grid, row, col) {
@@ -483,65 +457,6 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
     $scope.scrollToFocus = function( rowIndex, colIndex ) {
         $scope.gridApi.cellNav.scrollToFocus( $scope.pcmData[rowIndex], $scope.gridOptions.columnDefs[colIndex]);
     };
-
-
-    /**
-     * Save PCM on the server
-     */
-    $scope.save = function() {
-        $scope.pcm = convertGridToPCM($scope.pcmData)
-        var jsonModel = serializer.serialize($scope.pcm);
-
-        if (typeof id === 'undefined') {
-            $http.post("/api/create", JSON.parse(jsonModel)).success(function(data) {
-                id = data;
-                console.log("model created with id=" + id);
-                $rootScope.$broadcast('saved');
-            });
-        } else {
-            $http.post("/api/save/" + id, JSON.parse(jsonModel)).success(function(data) {
-                console.log("model saved");
-                $rootScope.$broadcast('saved');
-            });
-        }
-    };
-
-    /**
-     * Remove PCM from server
-     */
-    $scope.remove = function() {
-        if (typeof id !== 'undefined') {
-            $http.get("/api/remove/" + id).success(function(data) {
-                window.location.href = "/";
-                console.log("model removed");
-            });
-        }
-    };
-
-    /**
-     * Cancel edition
-     */
-    $scope.cancel = function() {
-        window.location = "/view/" + id;
-    };
-
-    // Bind events from toolbar to functions of the editor
-
-    $scope.$on('save', function(event, args) {
-        $scope.save();
-    });
-
-    $scope.$on('remove', function(event, args) {
-        $scope.remove();
-    });
-
-    $scope.$on('cancel', function(event, args) {
-        $scope.cancel();
-    });
-
-    $scope.$on('validate', function(event, args) {
-        $scope.validate();
-    });
 
 });
 	
