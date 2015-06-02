@@ -53,11 +53,10 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
             }
         });
         gridApi.cellNav.on.navigate($scope,function(newRowCol, oldRowCol){
-            $log.log('navigation event');
-            $log.log(newRowCol);
-            $log.log(newRowCol.col.name);
-            $log.log(newRowCol.row.entity.name);
-            $log.log(newRowCol.row.entity[newRowCol.col.name]);
+            var feature = newRowCol.col.name;
+            var product = newRowCol.row.entity.name;
+            var cell = newRowCol.row.entity[newRowCol.col.name];
+            $rootScope.$broadcast("selection", product, feature, cell)
         });
     };
 
