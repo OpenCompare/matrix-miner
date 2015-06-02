@@ -1,33 +1,18 @@
 package controllers
 
-import java.io.File
-
-
-import java.io
-
-import org.opencompare.api.java.impl.io.KMFJSONExporter
-
-import collection.JavaConversions._
-
-import org.opencompare.api.java.PCM
 import org.opencompare.api.java.impl.PCMFactoryImpl
+import org.opencompare.api.java.impl.io.KMFJSONExporter
 import org.opencompare.api.java.io.CSVLoader
-
+import play.api.Play.current
 import play.api._
 import play.api.libs.json._
 import play.api.mvc._
-
-import play.api.Play.current
-
-
-
-import scala.reflect.io.File
+import collection.JavaConversions._
 
 class Application extends Controller {
 
   val factory = new PCMFactoryImpl
   val datasetDir = "datasets/"
-  val workspaceDir = "datasets/"
 
 
   def index = Action {
@@ -36,93 +21,50 @@ class Application extends Controller {
     //Ok(views.html.index(">"))
   }
 
-  def category(fileRoot: String) = Action {
-
-/*   val fileName = fileRoot match {
-    case Some (f) => f
-    case None => ""
-   } */
-
-    val fileLocation = workspaceDir + fileRoot
-
-    val files = play.api.Play.getFile(fileLocation).listFiles()
-      .filter(f => f.isDirectory)
-    //      .sortBy(f => mkProperName(f))
-
-    val r = for (d <- files) yield d.getName
-    Ok(Json.toJson(Map("subcats" -> r)))
-  }
-
-def categoryRoot() = Action {
-
-    val fileLocation = workspaceDir 
-
-    val files = play.api.Play.getFile(fileLocation).listFiles()
-      .filter(f => f.isDirectory)
-
-    val r = for (d <- files) yield d.getName
-    Ok(Json.toJson(Map("subcats" -> r)))
-  }
+  def list() = Action { request =>
+    println("request")
+    val parameters = request.body.asJson.get.asInstanceOf[JsObject]
 
 
-  def _fileListToJSON(file : io.File) : JsValue  = {
-    if (!file.isDirectory()) {
-      if (""".*\.fml$""".r.findFirstIn(file.getName).isDefined ||
-        """.*\.dimacs$""".r.findFirstIn(file.getName).isDefined
-      ){
-        Json.toJson(Map ("label" -> Json.toJson(file.getName()),
-          "leaf" -> JsBoolean(true),
-          //add name
-          //"name" -> JsString(file.getName()),
-          //
-          "type" -> JsString("file"),
-          "id" -> JsString("fml" + file.getName()))) //"fml" + file.getName())) mkProperName(file)))
-      }else{
-        JsNull
-      }
+    val selectedDataset = (parameters \ "dataset").toOption
+    val selectedCategory = (parameters \ "category").toOption
+    val selectedFilter = (parameters \ "filter").toOption
+    val selectedPCM = (parameters \ "pcm").toOption
 
+
+    val datasets = listDirs(datasetDir)
+
+    val categories = if (selectedDataset.isDefined) {
+      listDirs(datasetDir + selectedDataset.get.as[String])
+    } else {
+      List.empty[String]
     }
-    else {
-      val files = file.listFiles
-      if (!files.isEmpty) {
-        val json = files.map(f =>
-          _fileListToJSON(f)
-        )
-        // "children:" + json.filter(j => !j.isInstanceOf[JsNull]).map() + " label:" + file.getName()
-        //json.map(j => Json.toJson(j)) // filter(j => !j.isInstanceOf[JsNull]).
-        Json.toJson(Map ("label" -> Json.toJson(file.getName()),
-          //add name
-          //"name" -> JsString(file.getName()),
-          //
-          "children" -> JsArray(json.filter(j => j match {case JsNull => false; case _ => true})),
-          "expanded" -> JsBoolean(true)
-        ))
-      }
-      else {
-        Json.toJson(Map ("label" -> Json.toJson(file.getName()),
-          "type" -> JsString("io")
-        )
-        )
-      }
+
+    val filters = List.empty[String]
+
+    val pcms = if (selectedDataset.isDefined && selectedCategory.isDefined) {
+      listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String])
+    } else {
+      List.empty[String]
     }
+
+
+    Ok(JsObject(Seq(
+      "datasets" -> Json.toJson(datasets),
+      "categories" -> Json.toJson(categories),
+      "filters" -> Json.toJson(filters),
+      "pcms" -> Json.toJson(pcms)
+    )))
   }
 
-  // print the parent directory name if the parent directory is not the root of the workspace (relative)
-  // FIXME
-  def mkProperName(f : io.File) = {
-    f.getAbsolutePath // .replaceFirst(workspaceDir, "")
+  def listDirs(path : String) : List[String] = {
+    println(path)
+    Play.getFile(path).listFiles().filter(_.isDirectory).map(_.getName).toList
   }
-
-  def recursiveListFiles(f: io.File): Array[io.File] = {
-    val these = f.listFiles
-    these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
-  }
-
-
 
   def getPCM(id : String) = Action {
     val csvOverviewLoader = new CSVLoader(factory, ';', '"', false)
-    val pcm = csvOverviewLoader.load(new io.File(datasetDir + "clustering-dataset/All Printers/cluster_8/finalPCM.csv"))
+    val pcm = csvOverviewLoader.load(Play.getFile(datasetDir + "clustering-dataset/All Printers/cluster_8/finalPCM.csv"))
     val jsonExporter = new KMFJSONExporter
     val json = jsonExporter.export(pcm)
     Ok(Json.parse(json))

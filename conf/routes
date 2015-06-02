@@ -3,12 +3,11 @@
 # ~~~~
 
 # Home page
-GET        /                     controllers.Application.index
-GET       /category/:id	 controllers.Application.category(id: String)
-GET        /categoryRoot	 controllers.Application.categoryRoot
-GET        /pcm/:id              controllers.Application.getPCM(id : String)
+GET        /                       controllers.Application.index
+POST        /list                   controllers.Application.list
+GET        /pcm/:id                controllers.Application.getPCM(id : String)
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file         controllers.Assets.versioned(path="/public", file: Asset)
-GET        /webjars/*file        controllers.WebJarAssets.at(file)
+GET        /assets/*file           controllers.Assets.versioned(path="/public", file: Asset)
+GET        /webjars/*file          controllers.WebJarAssets.at(file)
 

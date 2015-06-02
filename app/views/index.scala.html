@@ -1,33 +1,57 @@
 
 @main {
 
-    <div class="container">
+    <div class="container-fluid">
         <h1>Matrix Miner</h1>
 
 
+        <div ng-controller="PCMListController">
+
+            <h3>Choose a sample</h3>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="dataset">Dataset</label>
+                    <select ng-model="selectedDataset" class="form-control" id="dataset" ng-change="list()" ng-disabled="datasets.length === 0">
+                        <option ng-repeat="dataset in datasets">{{dataset}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select ng-model="selectedCategory" class="form-control" id="category" ng-change="list()" ng-disabled="categories.length === 0">
+                        <option ng-repeat="category in categories">{{category}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter">Filter</label>
+                    <select ng-model="selectedFilter" class="form-control" id="filter" ng-change="list()" ng-disabled="filters.length === 0">
+                        <option ng-repeat="filter in filters">{{filter}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pcm">PCM</label>
+                    <select ng-model="selectedPCM" class="form-control" id="pcm" ng-change="list()" ng-disabled="pcms.length === 0">
+                        <option ng-repeat="pcm in pcms">{{pcm}}</option>
+                    </select>
+                </div>
+                <button class="btn btn-default" ng-click="load()" ng-disabled="selectedPCM === undefined">Load</button>
+            </form>
+
+            @*<p><a id="category" ng-click='updRoot("");'>{{category}}</a></p>*@
+            @*<ul ng-repeat="subcategory in subcategories">*@
+                @*<li ng-click="upd(category, subcategory);">{{subcategory}}</li>*@
+            @*</ul>*@
+        </div>
 
         <div id="editor" ng-controller="PCMEditorController">
-
+            <h3>Explore the generated PCM</h3>
             <div id="matrix" class="row" ui-grid="gridOptions" ui-grid-selection ui-grid-edit ui-grid-cellNav ui-grid-move-columns ui-grid-resize-columns>
             </div>
 
         </div>
 
-	<div ng-controller="PCMListController">
-            <p><a id="category" ng-click='updRoot("");'>{{category}}</a></p>
-            <ul ng-repeat="subcategory in subcategories">
-                <li ng-click="upd(category, subcategory);">{{subcategory}}</li>
-            </ul>
-        </div>
-
-
-
         <div ng-controller="OverviewController">
-            <p ng-repeat="overview in overviews">
-            </p>
-
+            <h3>Textual overview</h3>
             <div highlight="text" keywords="keywords" highlight-class="highlight">
-
             </div>
         </div>
     </div>
