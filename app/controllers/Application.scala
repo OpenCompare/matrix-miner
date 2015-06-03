@@ -9,6 +9,7 @@ import play.api.libs.json._
 import play.api.mvc._
 import play.libs.XML
 import collection.JavaConversions._
+import scala.collection.mutable
 import scala.io.Source
 
 class Application extends Controller {
@@ -92,16 +93,23 @@ class Application extends Controller {
       val path = dirPath + "/finalPCM.csv"
 
       val pcm = csvOverviewLoader.load(Play.getFile(path))
-      val json = jsonExporter.export(pcm)
 
+
+      val skuToName = mutable.Map.empty[String, String]
+
+      // Extract overviews from XML dumps
       val overviewFiles = Play.getFile(dirPath).listFiles().filter(_.getName.endsWith(".xml")).toList
       val xmlOverviews = overviewFiles.map{ f =>
-        var name = f.getName.replace(".xml", ".txt")
         val xml = scala.xml.XML.loadString(Source.fromFile(f).mkString)
+        val sku = f.getName.replace(".xml", ".txt")
+        var name = (xml \ "name").head.text
+
+        skuToName.put(sku, name)
+
         name -> xml
       }.toMap
 
-
+      // Treat XML dumps
       val overviews = xmlOverviews.map { o =>
         val features = o._2.map(xml => xml \ "features" \ "feature").head
         println(features.length)
@@ -112,6 +120,15 @@ class Application extends Controller {
         (o._1, overview.mkString("<br/>"))
       }
 
+
+
+      // Rename products in PCM
+      for (product <- pcm.getProducts) {
+        product.setName(skuToName(product.getName))
+      }
+
+      // Export to JSON
+      val json = jsonExporter.export(pcm)
       val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
 
       Ok(JsObject(Seq(
