@@ -24,7 +24,7 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
         enableRowHeaderSelection: false,
         enableColumnResizing: false,
         enableFiltering: true,
-        headerRowHeight: 200
+        headerRowHeight: 70
     };
 
     $scope.gridOptions.onRegisterApi = function(gridApi){

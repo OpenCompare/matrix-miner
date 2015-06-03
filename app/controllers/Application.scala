@@ -7,6 +7,7 @@ import play.api.Play.current
 import play.api._
 import play.api.libs.json._
 import play.api.mvc._
+import play.libs.XML
 import collection.JavaConversions._
 import scala.io.Source
 
@@ -93,14 +94,29 @@ class Application extends Controller {
       val pcm = csvOverviewLoader.load(Play.getFile(path))
       val json = jsonExporter.export(pcm)
 
-      val overviewFiles = Play.getFile(dirPath).listFiles().filter(_.getName.endsWith(".txt")).toList
-      val overviews = overviewFiles.map{ f =>
-        f.getName -> Source.fromFile(f).mkString
+      val overviewFiles = Play.getFile(dirPath).listFiles().filter(_.getName.endsWith(".xml")).toList
+      val xmlOverviews = overviewFiles.map{ f =>
+        var name = f.getName.replace(".xml", ".txt")
+        val xml = scala.xml.XML.loadString(Source.fromFile(f).mkString)
+        name -> xml
       }.toMap
+
+
+      val overviews = xmlOverviews.map { o =>
+        val features = o._2.map(xml => xml \ "features" \ "feature").head
+        println(features.length)
+        val overview = features.map { node =>
+          val text = node.text
+          "<strong>" + text.replaceFirst("\n", "</strong><br/>")
+        }
+        (o._1, overview.mkString("<br/>"))
+      }
+
+      val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
 
       Ok(JsObject(Seq(
         "pcm" -> Json.parse(json),
-        "overviews" -> Json.toJson(overviews)
+        "overviews" -> jsonOverviews
       )))
     } else {
       NotFound("PCM not found")

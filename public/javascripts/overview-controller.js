@@ -22,6 +22,7 @@ matrixMinerApp.controller("OverviewController", function($rootScope, $scope, $ht
     });
 
     $scope.$on('overviews', function(event, data) {
+        console.log(data);
         $scope.overviews = data;
     });
 
