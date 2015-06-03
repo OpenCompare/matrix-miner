@@ -214,25 +214,12 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
         // Define columns
         var columnDefs = [];
         var index = 0;
-        columnDefs.push({
-            name: ' ',
-            cellTemplate: '<div class="buttonsCell">' +
-            '<button role="button" ng-click="grid.appScope.removeProduct(row)"><i class="fa fa-times"></i></button>'+
-            '</div>',
-            enableCellEdit: false,
-            enableFiltering: false,
-            enableSorting: false,
-            enableHiding: false,
-            width: 30,
-            enableColumnMenu: false,
-            allowCellFocus: false,
-            enableColumnMoving: false
-        });
+
 
         columnDefs.push({
             name: 'Product',
             field: "name",
-            width: "100",
+            width: "200",
             cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                 return 'productCell';
             },
