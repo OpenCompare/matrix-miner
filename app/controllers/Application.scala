@@ -69,23 +69,35 @@ class Application extends Controller {
   }
 
   def listDirs(path : String) : List[String] = {
-    println(path)
     Play.getFile(path).listFiles().filter(_.isDirectory).map(_.getName).toList
   }
 
   def load() = Action { request =>
     val parameters = request.body.asJson.get.asInstanceOf[JsObject]
 
-
     val selectedDataset = (parameters \ "dataset").toOption
     val selectedCategory = (parameters \ "category").toOption
     val selectedFilter = (parameters \ "filter").toOption
     val selectedPCM = (parameters \ "pcm").toOption
 
-    val pcm = csvOverviewLoader.load(Play.getFile(datasetDir + "clustering-dataset/All Printers/cluster_8/finalPCM.csv"))
-    val json = jsonExporter.export(pcm)
+    if (selectedPCM.isDefined) {
+      val dirPath = if (selectedFilter.isDefined) {
+        datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter.get.as[String] + "/" + selectedPCM.get.as[String]
+      } else {
+        datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedPCM.get.as[String]
+      }
 
-    Ok(Json.parse(json))
+      val path = dirPath + "/finalPCM.csv"
+
+      val pcm = csvOverviewLoader.load(Play.getFile(path))
+      val json = jsonExporter.export(pcm)
+
+      Ok(Json.parse(json))
+    } else {
+      NotFound("PCM not found")
+    }
+
+
   }
 
 }
