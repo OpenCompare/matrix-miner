@@ -21,4 +21,8 @@ matrixMinerApp.controller("OverviewController", function($rootScope, $scope, $ht
         $scope.keywords = feature + ", " + cell;
     });
 
+    $scope.$on('overviews', function(event, data) {
+        $scope.overviews = data;
+    });
+
 });

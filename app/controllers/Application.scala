@@ -8,6 +8,7 @@ import play.api._
 import play.api.libs.json._
 import play.api.mvc._
 import collection.JavaConversions._
+import scala.io.Source
 
 class Application extends Controller {
 
@@ -92,7 +93,15 @@ class Application extends Controller {
       val pcm = csvOverviewLoader.load(Play.getFile(path))
       val json = jsonExporter.export(pcm)
 
-      Ok(Json.parse(json))
+      val overviewFiles = Play.getFile(dirPath).listFiles().filter(_.getName.endsWith(".txt")).toList
+      val overviews = overviewFiles.map{ f =>
+        f.getName -> Source.fromFile(f).mkString
+      }.toMap
+
+      Ok(JsObject(Seq(
+        "pcm" -> Json.parse(json),
+        "overviews" -> Json.toJson(overviews)
+      )))
     } else {
       NotFound("PCM not found")
     }

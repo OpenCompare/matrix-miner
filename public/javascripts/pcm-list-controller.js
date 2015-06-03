@@ -29,7 +29,8 @@ matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $htt
             pcm: $scope.selectedPCM
         };
         $http.post("/load", postData).success(function (data) {
-            console.log(data);
+            $rootScope.$broadcast("pcm", data.pcm);
+            $rootScope.$broadcast("overviews", data.overviews);
         });
     };
 

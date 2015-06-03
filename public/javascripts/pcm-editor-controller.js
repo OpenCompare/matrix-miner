@@ -61,8 +61,7 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
     };
 
 
-    // Load PCM
-    $http.post("/load", {}).success(function (data) {
+    $scope.$on('pcm', function(event, data) {
         $scope.pcm = loader.loadModelFromString(JSON.stringify(data)).get(0);
         initializeEditor($scope.pcm)
     });
@@ -403,7 +402,7 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
 
     $scope.validateEverything = function () {
         validation = [];
-    }
+    };
 
     $scope.deleteFeature = function(featureName) {
         delete validation[featureName];
