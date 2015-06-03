@@ -11,8 +11,7 @@ matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $htt
         var postData = {
             dataset: $scope.selectedDataset,
             category: $scope.selectedCategory,
-            filter: $scope.selectedFilter,
-            pcm: $scope.selectedPCM
+            filter: $scope.selectedFilter
         };
         $http.post("/list", postData).success(function (data) {
             $scope.datasets = data.datasets;

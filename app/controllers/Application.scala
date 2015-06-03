@@ -29,8 +29,6 @@ class Application extends Controller {
     val selectedDataset = (parameters \ "dataset").toOption
     val selectedCategory = (parameters \ "category").toOption
     val selectedFilter = (parameters \ "filter").toOption
-    val selectedPCM = (parameters \ "pcm").toOption
-
 
     val datasets = listDirs(datasetDir)
 
@@ -40,12 +38,25 @@ class Application extends Controller {
       List.empty[String]
     }
 
-    val filters = List.empty[String]
+    val (filters, pcms) = if (selectedDataset.isDefined && selectedCategory.isDefined && !selectedFilter.isDefined) {
+      val topLevelDirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String])
 
-    val pcms = if (selectedDataset.isDefined && selectedCategory.isDefined) {
-      listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String])
+      // Detect if there is a filter level
+      val firstTopLevelDir = Play.getFile(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + topLevelDirs.head)
+      val isPCMLevel = firstTopLevelDir.listFiles().exists(_.getName.endsWith(".txt"))
+
+      if (isPCMLevel) {
+        (List.empty[String], topLevelDirs)
+      } else {
+        (topLevelDirs, List.empty[String])
+      }
+    } else if (selectedDataset.isDefined && selectedCategory.isDefined && selectedFilter.isDefined) {
+      val filterDirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String])
+      val pcmDirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter.get.as[String])
+
+      (filterDirs, pcmDirs)
     } else {
-      List.empty[String]
+      (List.empty[String], List.empty[String])
     }
 
 
