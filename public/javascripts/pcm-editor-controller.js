@@ -63,7 +63,7 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
 
     $scope.$on('pcm', function(event, data) {
         $scope.pcm = loader.loadModelFromString(JSON.stringify(data)).get(0);
-        initializeEditor($scope.pcm)
+        initializeEditor($scope.pcm);
     });
 
     function newColumnDef(featureName, featureType) {

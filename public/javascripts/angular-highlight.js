@@ -7,7 +7,8 @@ angular.module('angular-highlight', []).directive('highlight', function() {
 		
 		var replacer = function(match, item) {
 			return '<span class="'+attrs.highlightClass+'">'+match+'</span>';
-		}
+		};
+
 		var tokenize = function(keywords) {
 			var keywords_yop = keywords.replace(new RegExp(',$','g'), '').split(',');
 			var i;
@@ -16,7 +17,7 @@ angular.module('angular-highlight', []).directive('highlight', function() {
 				keywords_yop[i] = keywords_yop[i].replace(new RegExp('^ | $','g'), '');
 			}
 			return keywords_yop;
-		}
+		};
 
 		scope.$watch('keywords', function() {
 			//console.log("scope.keywords",scope.keywords);
@@ -29,16 +30,13 @@ angular.module('angular-highlight', []).directive('highlight', function() {
 			var tokenized	= tokenize(scope.keywords);
 			var regex 		= new RegExp(tokenized.join('|'), 'gmi');
 			
-			console.log("regex",regex);
-
 			// Find the words
 			var html = scope.highlight.replace(regex, replacer);
 
-			console.log(html)
-
 			element.html(html);
 		});
-	}
+	};
+
 	return {
 		link: 			component,
 		replace:		false,

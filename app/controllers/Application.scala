@@ -99,6 +99,7 @@ class Application extends Controller {
 
       // Extract overviews from XML dumps
       val overviewFiles = Play.getFile(dirPath).listFiles().filter(_.getName.endsWith(".xml")).toList
+
       val xmlOverviews = overviewFiles.map{ f =>
         val xml = scala.xml.XML.loadString(Source.fromFile(f).mkString)
         val sku = f.getName.replace(".xml", ".txt")
@@ -112,7 +113,7 @@ class Application extends Controller {
       // Treat XML dumps
       val overviews = xmlOverviews.map { o =>
         val features = o._2.map(xml => xml \ "features" \ "feature").head
-        println(features.length)
+
         val overview = features.map { node =>
           val text = node.text
           "<strong>" + text.replaceFirst("\n", "</strong><br/>")
