@@ -31,7 +31,8 @@ class Application extends Controller {
 
     val selectedDataset = (parameters \ "dataset").toOption
     val selectedCategory = (parameters \ "category").toOption
-    val selectedFilter = (parameters \ "filter").toOption
+    val selectedFilter1 = (parameters \ "filter1").toOption
+    val selectedFilter2 = (parameters \ "filter2").toOption
 
     val datasets = listDirs(datasetDir)
 
@@ -41,32 +42,46 @@ class Application extends Controller {
       List.empty[String]
     }
 
-    val (filters, pcms) = if (selectedDataset.isDefined && selectedCategory.isDefined && !selectedFilter.isDefined) {
+    val (filters1, filters2, pcms) = if (selectedDataset.isDefined && selectedCategory.isDefined && !selectedFilter1.isDefined) {
       val topLevelDirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String])
 
       // Detect if there is a filter level
       val firstTopLevelDir = Play.getFile(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + topLevelDirs.head)
-      val isPCMLevel = firstTopLevelDir.listFiles().exists(_.getName.endsWith(".txt"))
+      val isPCMLevel = firstTopLevelDir.listFiles().exists(_.getName.endsWith(".xml"))
 
       if (isPCMLevel) {
-        (List.empty[String], topLevelDirs)
+        (List.empty[String], List.empty[String], topLevelDirs)
       } else {
-        (topLevelDirs, List.empty[String])
+        (topLevelDirs, List.empty[String], List.empty[String])
       }
-    } else if (selectedDataset.isDefined && selectedCategory.isDefined && selectedFilter.isDefined) {
-      val filterDirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String])
-      val pcmDirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter.get.as[String])
+    } else if (selectedDataset.isDefined && selectedCategory.isDefined && selectedFilter1.isDefined && !selectedFilter2.isDefined) {
+      val filter1Dirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String])
 
-      (filterDirs, pcmDirs)
+      val topLevelDirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter1.get.as[String])
+      val firstTopLevelDir = Play.getFile(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter1.get.as[String] + "/" + topLevelDirs.head)
+      val isPCMLevel = firstTopLevelDir.listFiles().exists(_.getName.endsWith(".xml"))
+
+      if (isPCMLevel) {
+        (filter1Dirs, List.empty[String], topLevelDirs)
+      } else {
+        (filter1Dirs, topLevelDirs, List.empty[String])
+      }
+
+    } else if (selectedDataset.isDefined && selectedCategory.isDefined && selectedFilter1.isDefined && selectedFilter2.isDefined) {
+      val filter1Dirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String])
+      val filter2Dirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter1.get.as[String])
+      val pcmDirs = listDirs(datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter1.get.as[String] + "/" + selectedFilter2.get.as[String])
+      (filter1Dirs, filter2Dirs, pcmDirs)
     } else {
-      (List.empty[String], List.empty[String])
+      (List.empty[String], List.empty[String], List.empty[String])
     }
 
 
     Ok(JsObject(Seq(
       "datasets" -> Json.toJson(datasets),
       "categories" -> Json.toJson(categories),
-      "filters" -> Json.toJson(filters),
+      "filters1" -> Json.toJson(filters1),
+      "filters2" -> Json.toJson(filters2),
       "pcms" -> Json.toJson(pcms)
     )))
   }
@@ -80,12 +95,13 @@ class Application extends Controller {
 
     val selectedDataset = (parameters \ "dataset").toOption
     val selectedCategory = (parameters \ "category").toOption
-    val selectedFilter = (parameters \ "filter").toOption
+    val selectedFilter1 = (parameters \ "filter1").toOption
+    val selectedFilter2 = (parameters \ "filter2").toOption
     val selectedPCM = (parameters \ "pcm").toOption
 
     if (selectedPCM.isDefined) {
-      val dirPath = if (selectedFilter.isDefined) {
-        datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter.get.as[String] + "/" + selectedPCM.get.as[String]
+      val dirPath = if (selectedFilter1.isDefined) {
+        datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter1.get.as[String] + "/" + selectedPCM.get.as[String]
       } else {
         datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedPCM.get.as[String]
       }

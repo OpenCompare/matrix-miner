@@ -11,25 +11,35 @@
             <form class="form-inline">
                 <div class="form-group">
                     <label for="dataset">Dataset</label>
-                    <select ng-model="selectedDataset" class="form-control" id="dataset" ng-change="list()" ng-disabled="datasets.length === 0">
+                    <select ng-model="selectedDataset" class="form-control" id="dataset" ng-change="list('dataset')" ng-change="clearDatasets()" ng-disabled="datasets.length === 0">
                         <option ng-repeat="dataset in datasets">{{dataset}}</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="category">Category</label>
-                    <select ng-model="selectedCategory" class="form-control" id="category" ng-change="list()" ng-disabled="categories.length === 0">
+                    <select ng-model="selectedCategory" class="form-control" id="category" ng-change="list('category')" ng-disabled="categories.length === 0">
                         <option ng-repeat="category in categories">{{category}}</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="filter">Filter</label>
-                    <select ng-model="selectedFilter" class="form-control" id="filter" ng-change="list()" ng-disabled="filters.length === 0">
-                        <option ng-repeat="filter in filters">{{filter}}</option>
+                    <label for="filter1">Filter 1</label>
+                    <select ng-model="selectedFilter1" class="form-control" id="filter1" ng-change="list('filter1')" ng-disabled="filters1.length === 0">
+                        <option ng-repeat="filter in filters1">{{filter}}</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="filter2">Filter 2</label>
+                    <select ng-model="selectedFilter2" class="form-control" id="filter2" ng-change="list('filter2')" ng-disabled="filters2.length === 0">
+                        <option ng-repeat="filter in filters2">{{filter}}</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label for="pcm">PCM</label>
-                    <select ng-model="selectedPCM" class="form-control" id="pcm" ng-change="list()" ng-disabled="pcms.length === 0">
+                    <select ng-model="selectedPCM" class="form-control" id="pcm" ng-disabled="pcms.length === 0">
                         <option ng-repeat="pcm in pcms">{{pcm}}</option>
                     </select>
                 </div>
