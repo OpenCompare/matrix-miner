@@ -88,14 +88,14 @@
             <div class="col-md-6">
                 <div ng-controller="SpecificationController">
                     <h4>Specification</h4>
-                    <table>
+                    <table class="table">
                         <tr>
                             <th>Feature</th>
                             <th>Value</th>
                         </tr>
-                        <tr ng-repeat="(feature, value) in specification">
-                            <td>{{feature}}</td>
-                            <td>{{value}}</td>
+                        <tr ng-repeat="row in specification | filter:filterFeature">
+                            <td>{{row.feature}}</td>
+                            <td>{{row.value}}</td>
                         </tr>
                     </table>
                 </div>

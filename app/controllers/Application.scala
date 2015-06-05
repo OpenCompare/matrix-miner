@@ -156,7 +156,13 @@ class Application extends Controller {
       // Export to JSON
       val json = jsonExporter.export(pcm)
       val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
-      val jsonSpecifications = JsObject(specifications.toSeq.map(o => o._1 -> JsObject(o._2.map(t => (t._1, JsString(t._2))))))
+      val jsonSpecifications = JsObject(specifications.toSeq.map(o => o._1 -> JsArray(
+        o._2.map(t =>
+          JsObject(Seq(
+            "feature" -> JsString(t._1),
+            "value" -> JsString(t._2)
+          )))
+      )))
 
       Ok(JsObject(Seq(
         "pcm" -> Json.parse(json),
