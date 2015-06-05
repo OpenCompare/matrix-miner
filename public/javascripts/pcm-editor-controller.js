@@ -73,7 +73,7 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
         columnsType[featureName] = featureType;
         var columnDef = {
             name: featureName,
-            width: "100",
+            width: "150",
             enableCellEdit: false,
             enableSorting: true,
             enableHiding: false,
@@ -229,11 +229,17 @@ matrixMinerApp.controller("PCMEditorController", function($rootScope, $scope, $h
             enableColumnMoving: false
         });
         var colIndex = 0;
-            pcm.features.array.forEach(function (feature) {
-                var colDef = newColumnDef(feature.name, getType(feature.name));
-                columnDefs.push(colDef);
-                colIndex++;
-            });
+
+        pcm.features.array
+            .sort(function (feature1, feature2) {
+                var type = getType(feature1.name);
+                return type === "boolean" ? 1 : -1;
+            })
+            .forEach(function (feature) {
+            var colDef = newColumnDef(feature.name, getType(feature.name));
+            columnDefs.push(colDef);
+            colIndex++;
+        });
 
         $scope.gridOptions.columnDefs = columnDefs;
         if($scope.pcmData.length > 0){
