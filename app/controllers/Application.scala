@@ -100,7 +100,9 @@ class Application extends Controller {
     val selectedPCM = (parameters \ "pcm").toOption
 
     if (selectedPCM.isDefined) {
-      val dirPath = if (selectedFilter1.isDefined) {
+      val dirPath = if (selectedFilter1.isDefined && selectedFilter2.isDefined) {
+        datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter1.get.as[String]  + "/" + selectedFilter2.get.as[String] + "/" + selectedPCM.get.as[String]
+      } else if (selectedFilter1.isDefined) {
         datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedFilter1.get.as[String] + "/" + selectedPCM.get.as[String]
       } else {
         datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedPCM.get.as[String]
