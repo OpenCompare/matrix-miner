@@ -118,7 +118,7 @@ class Application extends Controller {
       // Extract overviews from XML dumps
       val overviewFiles = Play.getFile(dirPath).listFiles().filter(_.getName.endsWith(".xml")).toList
 
-      val xmlOverviews = overviewFiles.map{ f =>
+      val bestbuyXML = overviewFiles.map{ f =>
         val xml = scala.xml.XML.loadString(Source.fromFile(f).mkString)
         val sku = f.getName.replace(".xml", ".txt")
         var name = (xml \ "name").head.text
@@ -129,7 +129,7 @@ class Application extends Controller {
       }.toMap
 
       // Treat XML dumps
-      val overviews = xmlOverviews.map { o =>
+      val overviews = bestbuyXML.map { o =>
         val features = o._2.map(xml => xml \ "features" \ "feature").head
 
         val overview = features.map { node =>
@@ -139,7 +139,14 @@ class Application extends Controller {
         (o._1, overview.mkString("<br/>"))
       }
 
-
+      val specifications = bestbuyXML.map { bbXML =>
+        val specification = (bbXML._2 \ "details" \ "detail").map { detail =>
+          val name = (detail \ "name").text
+          val value = (detail \ "value").text
+          (name, value)
+        }
+        (bbXML._1, specification)
+      }
 
       // Rename products in PCM
       for (product <- pcm.getProducts) {
@@ -149,10 +156,12 @@ class Application extends Controller {
       // Export to JSON
       val json = jsonExporter.export(pcm)
       val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
+      val jsonSpecifications = JsObject(specifications.toSeq.map(o => o._1 -> JsObject(o._2.map(t => (t._1, JsString(t._2))))))
 
       Ok(JsObject(Seq(
         "pcm" -> Json.parse(json),
-        "overviews" -> jsonOverviews
+        "overviews" -> jsonOverviews,
+        "specifications" -> jsonSpecifications
       )))
     } else {
       NotFound("PCM not found")
