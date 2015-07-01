@@ -110,7 +110,7 @@ class Application extends Controller {
 
       val path = dirPath + "/finalPCM.csv"
 
-      val pcm = csvOverviewLoader.load(Play.getFile(path))
+      val pcmContainers = csvOverviewLoader.load(Play.getFile(path))
 
 
       val skuToName = mutable.Map.empty[String, String]
@@ -149,12 +149,14 @@ class Application extends Controller {
       }
 
       // Rename products in PCM
+      val pcmContainer = pcmContainers.head
+      val pcm = pcmContainer.getPcm
       for (product <- pcm.getProducts) {
         product.setName(skuToName(product.getName))
       }
 
       // Export to JSON
-      val json = jsonExporter.export(pcm)
+      val json = jsonExporter.export(pcmContainer)
       val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
       val jsonSpecifications = JsObject(specifications.toSeq.map(o => o._1 -> JsArray(
         o._2.map(t =>

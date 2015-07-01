@@ -15,6 +15,9 @@ libraryDependencies ++= Seq(
   "org.kevoree.modeling" % "org.kevoree.modeling.microframework" % "3.5.12",
   "com.opencsv" % "opencsv" % "3.3",
   "org.webjars" % "angular-highlightjs" % "0.3.2-1",
+  "org.opencompare" % "model" % "0.4-SNAPSHOT",
+  "org.opencompare" % "api-java" % "0.4-SNAPSHOT",
+  "org.opencompare" % "api-java-impl" % "0.4-SNAPSHOT",
   jdbc,
   cache,
   ws,
@@ -22,6 +25,7 @@ libraryDependencies ++= Seq(
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
