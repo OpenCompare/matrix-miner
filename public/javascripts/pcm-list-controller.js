@@ -1,12 +1,11 @@
 
-matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $http) {
+matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $http, opencompareinitializer) {
 
     $scope.datasets = [];
     $scope.categories = [];
     $scope.filters1 = [];
     $scope.filters2 = [];
     $scope.pcms = [];
-
 
     $scope.list = function(level) {
 
@@ -22,7 +21,6 @@ matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $htt
         } else if (level === "filter1") {
             delete $scope.selectedFilter2;
         }
-
 
         var postData = {
             dataset: $scope.selectedDataset,
@@ -48,7 +46,9 @@ matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $htt
             pcm: $scope.selectedPCM
         };
         $http.post("/load", postData).success(function (data) {
-            $rootScope.$broadcast("pcm", data.pcm);
+            //$rootScope.$broadcast("pcm", data.pcm);
+            $scope.myData = data;
+            opencompareinitializer.initialize(data);
             $rootScope.$broadcast("overviews", data.overviews);
             $rootScope.$broadcast("specifications", data.specifications);
         });
