@@ -7,26 +7,10 @@ var pcmApp = angular.module("openCompare", ['ui.grid', 'ui.grid.edit', 'ui.grid.
 /**
  * Created by gbecan on 17/12/14.
  */
-
-pcmApp.service('opencompareinitializer', function($rootScope) {
-    this.initialize = function(data) {
-        $rootScope.$broadcast('initializeFromExternalSource', data);
+pcmApp.controller("EditorCtrl", function($controller, $rootScope, $scope, $http, $timeout, uiGridConstants, $compile, $modal, expandeditor,  $location, pcmApi) {
+    if($.material) {
+        $.material.init();
     }
-
-
-});
-
-pcmApp.controller("EditorCtrl", function($controller, $rootScope, $scope, $http, $timeout, uiGridConstants, $compile, $modal, $location, pcmApi) {
-   if($.material) {
-       $.material.init();
-   }
-
-    $scope.$on('initializeFromExternalSource', function(event, args) {
-        $scope.pcm = loader.loadModelFromString(JSON.stringify(args.pcm)).get(0);
-        pcmApi.decodePCM($scope.pcm); // Decode PCM from Base64
-        $scope.metadata = args.metadata;
-        $scope.initializeEditor($scope.pcm, $scope.metadata);
-    });
 
     var subControllers = {
         $scope: $scope,
@@ -61,7 +45,7 @@ pcmApp.controller("EditorCtrl", function($controller, $rootScope, $scope, $http,
     if (typeof id === 'undefined' && typeof data === 'undefined') {
         /* Create an empty PCM */
         $scope.pcm = factory.createPCM();
-        $scope.setEdit(true, false);
+        $scope.setEdit(false, false);
         $scope.initializeEditor($scope.pcm, $scope.metadata);
 
     } else if (typeof data != 'undefined')  {
@@ -96,6 +80,12 @@ pcmApp.controller("EditorCtrl", function($controller, $rootScope, $scope, $http,
             scope: $scope
         })
     }
+    $scope.$on('initializeFromExternalSource', function(event, args) {
+        $scope.pcm = loader.loadModelFromString(JSON.stringify(args.pcm)).get(0);
+        pcmApi.decodePCM($scope.pcm); // Decode PCM from Base64
+        $scope.metadata = args.metadata;
+        $scope.initializeEditor($scope.pcm, $scope.metadata);
+    });
 
     $scope.setGridHeight = function() {
 
@@ -189,9 +179,9 @@ pcmApp.controller("EditorCtrl", function($controller, $rootScope, $scope, $http,
      */
     $scope.save = function() {
 
-        $scope.pcm = convertGridToPCM($scope.pcmData);
+        var pcmToSave = convertGridToPCM($scope.pcmData);
         $scope.metadata = generateMetadata($scope.pcmData, $scope.gridOptions.columnDefs);
-        var jsonModel = JSON.parse(serializer.serialize($scope.pcm));
+        var jsonModel = JSON.parse(serializer.serialize(pcmToSave));
 
         var pcmObject = {};
         pcmObject.metadata = $scope.metadata;
@@ -292,9 +282,9 @@ pcmApp.controller("EditorCtrl", function($controller, $rootScope, $scope, $http,
     });
 
     $scope.$on('export', function (event, args) {
-        $scope.pcm = convertGridToPCM($scope.pcmData);
+        var pcmToExport = convertGridToPCM($scope.pcmData);
         $scope.metadata = generateMetadata($scope.pcmData, $scope.gridOptions.columnDefs);
-        var jsonModel = JSON.parse(serializer.serialize($scope.pcm));
+        var jsonModel = JSON.parse(serializer.serialize(pcmToExport));
         $scope.pcmObject = {};
         $scope.pcmObject.metadata = $scope.metadata;
         $scope.pcmObject.pcm = jsonModel;
@@ -750,7 +740,7 @@ pcmApp.controller("FiltersCtrl", function($rootScope, $scope, $http, $timeout, u
  * Created by hvallee on 6/19/15.
  */
 
-pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeout, uiGridConstants, $location, pcmApi) {
+pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeout, uiGridConstants, $location, pcmApi, expandeditor) {
 
     $scope.height = 300;
     $scope.enableEdit = true;
@@ -771,11 +761,48 @@ pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeou
         headerRowHeight: 60,
         rowHeight: 28
     };
-
-
+    $scope.columnMovedFunctions = [];
+    $scope.beginCellEditFunctions = [];
+    $scope.afterCellEditFunctions = [];
+    $scope.onNavigateFunctions = [];
 
     $scope.loading = false;
 
+    /* Grid event functions */
+    $scope.setRawValue = function(rowEntity, colDef, rawValue, contentValue) {
+
+        rawValue = $scope.pcmDataRaw[$scope.pcmData.indexOf(rowEntity)][colDef.name];
+        contentValue = rowEntity[colDef.name];
+        rowEntity[colDef.name] = rawValue;
+    };
+
+    $scope.setVisualRepresentation = function(rowEntity, colDef, newValue, oldValue, rawValue, contentValue) {
+
+        if(newValue && rawValue != newValue) {
+            $rootScope.$broadcast('modified');
+            $scope.pcmData[$scope.pcmData.indexOf(rowEntity)][colDef.name] = getVisualRepresentation(newValue, $scope.pcmData.indexOf(rowEntity),
+                colDef.name, rowEntity.$$hashKey, contentValue, rawValue, newValue);
+        }
+        else {
+            $scope.pcmData[$scope.pcmData.indexOf(rowEntity)][colDef.name] = contentValue;
+        }
+        /* Update value based on visual representation and raw */
+        $scope.pcmDataRaw[$scope.pcmData.indexOf(rowEntity)][colDef.name] = newValue;
+    };
+
+    $scope.moveColumnData = function(colDef, originalPosition, newPosition) {
+
+        $scope.gridOptions.columnDefs.move(originalPosition, newPosition);
+        var commandParameters = [originalPosition, newPosition];
+
+        $scope.newCommand('move', commandParameters);
+        $rootScope.$broadcast('modified');
+    };
+    $scope.columnMovedFunctions.push($scope.moveColumnData);
+    $scope.beginCellEditFunctions.push($scope.setRawValue);
+    $scope.afterCellEditFunctions.push($scope.setVisualRepresentation);
+
+    /* Register grid functions */
     $scope.gridOptions.onRegisterApi = function(gridApi){
 
         var contentValue;
@@ -785,33 +812,32 @@ pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeou
 
         /* Called when columns arem oved */
         gridApi.colMovable.on.columnPositionChanged($scope,function(colDef, originalPosition, newPosition){
-            $scope.gridOptions.columnDefs.move(originalPosition, newPosition);
-            var commandParameters = [originalPosition, newPosition];
-
-            $scope.newCommand('move', commandParameters);
-            $rootScope.$broadcast('modified');
+            for(var i = 0; i <   $scope.columnsMovedFunctions.length; i++) {
+                $scope.columnMovedFunctions[i]();
+            }
         });
 
         gridApi.edit.on.beginCellEdit($scope, function(rowEntity, colDef) {
-
-            rawValue = $scope.pcmDataRaw[$scope.pcmData.indexOf(rowEntity)][colDef.name];
-            contentValue = rowEntity[colDef.name];
-            rowEntity[colDef.name] = rawValue;
+            for(var i = 0; i <   $scope.beginCellEditFunctions.length; i++) {
+                $scope.beginCellEditFunctions[i](rowEntity, colDef, contentValue, rawValue);
+            }
 
         });
 
         gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-            if(newValue && rawValue != newValue) {
-                $rootScope.$broadcast('modified');
-                $scope.pcmData[$scope.pcmData.indexOf(rowEntity)][colDef.name] = getVisualRepresentation(newValue, $scope.pcmData.indexOf(rowEntity),
-                    colDef.name, rowEntity.$$hashKey, contentValue, rawValue, newValue);
+            for(var i = 0; i <   $scope.afterCellEditFunctions.length; i++) {
+                $scope.afterCellEditFunctions[i](rowEntity, colDef, newValue, oldValue, rawValue, contentValue);
             }
-            else {
-                $scope.pcmData[$scope.pcmData.indexOf(rowEntity)][colDef.name] = contentValue;
-            }
-            /* Update value based on visual representation and raw */
-            $scope.pcmDataRaw[$scope.pcmData.indexOf(rowEntity)][colDef.name] = newValue;
+        });
 
+        gridApi.cellNav.on.navigate($scope,function(rowEntity, colDef){
+            for(var i = 0; i <   $scope.onNavigateFunctions.length; i++) {
+                $scope.onNavigateFunctions[i](rowEntity, colDef);
+            }
+            var expandedFunctions = expandeditor.expandNavigateFunctions().navigateFunctions;
+            for(var i = 0; i <   expandedFunctions.length; i++) {
+                expandedFunctions[i](rowEntity, colDef);
+            }
         });
     };
 
@@ -852,7 +878,7 @@ pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeou
             enableColumnMoving: $scope.edit,
             enableCellEdit: $scope.edit,
             enableCellEditOnFocus: $scope.edit,
-            allowCellFocus: $scope.edit,
+            allowCellFocus: true,
             filter: {term: ''},
             minWidth: 80,
             menuItems: [
@@ -1092,7 +1118,7 @@ pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeou
             enableColumnMoving: false,
             enableCellEdit: $scope.edit,
             enableCellEditOnFocus: $scope.edit,
-            allowCellFocus: $scope.edit,
+            allowCellFocus: true,
             minWidth: 100,
             menuItems: [
                 {
@@ -1834,6 +1860,9 @@ pcmApp.controller("WikipediaImportController", function($rootScope, $scope, $htt
 });
 
 
+
+
+
 /**
  * Created by gbecan on 6/23/15.
  */
@@ -1913,9 +1942,9 @@ pcmApp.factory('i18nLoader', function($http, $q, $translate) {
             $translate.use('oc');
             return deferred.resolve(data);
         }).
-            error(function(data, status, headers, config) {
+        error(function(data, status, headers, config) {
                 $translate.use('embedded');
-            });
+        });
 
         return deferred.promise;
     }
@@ -1931,8 +1960,66 @@ pcmApp.controller("I18nCtrl", function($scope, $http) {
     };
 
 
-});
+});/**
+ * Created by hvallee on 7/2/15.
+ */
 
+
+pcmApp.service('opencompareinitializer', function($rootScope) {
+    this.initialize = function(data) {
+        $rootScope.$broadcast('initializeFromExternalSource', data);
+    }
+
+
+});
+/**
+ * Created by hvallee on 7/3/15.
+ */
+
+pcmApp.service('expandeditor', function() {
+
+    var afterCellEditFunctions = [];
+    this.expandAfterCellEdit = function(functionToAdd) {
+        return{
+            afterCellEditFunctions: afterCellEditFunctions,
+                addFunction: function() {
+                    afterCellEditFunctions.push(functionToAdd);
+            }
+        }
+    };
+
+    var beginCellEditFunctions = [];
+    this.expandBeginCellEdit = function(functionToAdd) {
+        return{
+            beginCellEditFunctions: beginCellEditFunctions,
+                addFunction: function() {
+                    beginCellEditFunctions.push(functionToAdd);
+            }
+        }
+    };
+
+    var columnMovedFunctions = [];
+    this.expandColumnsMoved = function(functionToAdd) {
+        return{
+            columnMovedFunctions: columnMovedFunctions,
+                addFunction: function() {
+                    columnMovedFunctions.push(functionToAdd);
+            }
+        }
+    };
+
+    var navigateFunctions = [];
+    this.expandNavigateFunctions = function(functionToAdd) {
+        return{
+            navigateFunctions: navigateFunctions,
+            addFunction: function() {
+                navigateFunctions.push(functionToAdd);
+            }
+        }
+    };
+
+
+});
 /**
  * Created by hvallee on 6/19/15.
  */
