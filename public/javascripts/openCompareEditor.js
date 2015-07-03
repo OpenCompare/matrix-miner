@@ -1834,20 +1834,11 @@ pcmApp.controller("WikipediaImportController", function($rootScope, $scope, $htt
 });
 
 
-
-
-
-/**
- * Created by gbecan on 6/23/15.
- */
-
 /**
  * Created by gbecan on 6/23/15.
  */
 
 pcmApp.config(function ($translateProvider) {
-    $translateProvider.useSanitizeValueStrategy('escaped');
-    $translateProvider.useLoader('i18nLoader');
     $translateProvider.translations('embedded', {
 
         'view.button.edit':'Edit',
@@ -1908,25 +1899,30 @@ pcmApp.config(function ($translateProvider) {
         'importer.button.confirm.desc':'Please, give a name to this new PCM and confirm.'
 
     });
+    $translateProvider.useSanitizeValueStrategy('escaped');
+    $translateProvider.useLoader('i18nLoader');
     $translateProvider.preferredLanguage('oc');
 });
 
-pcmApp.factory('i18nLoader', function($http, $q, $rootScope) {
+pcmApp.factory('i18nLoader', function($http, $q, $translate) {
+
     return function(options) {
         var deferred = $q.defer();
 
-        $http.get("/api/i18dsn").success(function (data) {
+        $http.get("/api/i18n").success(function (data) {
+            $translate.use('oc');
             return deferred.resolve(data);
         }).
             error(function(data, status, headers, config) {
-                $rootScope.$broadcast('switchToEmbeddedLanguage');
+                $translate.use('embedded');
             });
+
         return deferred.promise;
     }
 });
 
 
-pcmApp.controller("I18nCtrl", function($scope, $http, $translate) {
+pcmApp.controller("I18nCtrl", function($scope, $http) {
 
     $scope.changeLanguage = function(langKey) {
         $http.get("/api/i18n/" + langKey).success(function (data) {
@@ -1934,12 +1930,10 @@ pcmApp.controller("I18nCtrl", function($scope, $http, $translate) {
         });
     };
 
-    $scope.$on('switchToEmbeddedLanguage', function(event, args) {console.log("here");
-        $translate.use('embedded');
-    });
 
+});
 
-});/**
+/**
  * Created by hvallee on 6/19/15.
  */
 
