@@ -1,86 +1,89 @@
 @main {
 
 
-    <div class="row">
+    <div ng-controller="EvalCtrl">
+        <div class="row">
 
-        <div class="col-md-6">
-            <div ng-controller="EditorCtrl" embed-open-compare-editor>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <h4>Feature and cells</h4>
-            <form>
-                <div class="radio">
-                    <label class="radio-inline">
-                        <input type="radio" name="feature" value="correct"> Correct
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="feature" value="incorrect"> Incorrect
-                    </label>
-                </div>
-            </form>
-        </div>
-
-    </div>
-
-
-
-    <div class="row">
-        <div class="col-md-6">
             <div class="col-md-6">
-                <div ng-controller="OverviewController">
-                    <h4>Textual overview</h4>
-                    <div highlight="text" keywords="keywords" highlight-class="highlight">
+                <div ng-controller="EditorCtrl" embed-open-compare-editor>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h4>Feature and cells</h4>
+                <form name="matrixForm">
+                    <div class="radio">
+                        <label class="radio-inline">
+                            <input type="radio" name="feature" ng-model="feature" value="correct" required> Correct
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="feature" ng-model="feature" value="incorrect" required> Incorrect
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-6">
+                    <div ng-controller="OverviewController">
+                        <h4>Textual overview</h4>
+                        <div highlight="text" keywords="keywords" highlight-class="highlight">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+
+                    <div ng-controller="SpecificationController">
+                        <h4>Specification</h4>
+                        <table class="table">
+                            <tr>
+                                <th>Feature</th>
+                                <th>Value</th>
+                            </tr>
+                            <tr ng-repeat="row in specification | filter:filterFeature">
+                                <td>{{row.feature}}</td>
+                                <td>{{row.value}}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-6">
+                <h4>Overview vs Specification</h4>
 
-                <div ng-controller="SpecificationController">
-                    <h4>Specification</h4>
-                    <table class="table">
-                        <tr>
-                            <th>Feature</th>
-                            <th>Value</th>
-                        </tr>
-                        <tr ng-repeat="row in specification | filter:filterFeature">
-                            <td>{{row.feature}}</td>
-                            <td>{{row.value}}</td>
-                        </tr>
-                    </table>
-                </div>
+                <form name="specForm">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="overVsSpec" ng-model="overVsSpec" id="specEqualOver" value="specEqualOver" required> Over = Spec
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="overVsSpec" ng-model="overVsSpec" id="overInSpec" value="overInSpec" required> Over < Spec
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="overVsSpec" ng-model="overVsSpec" id="specInOver" value="specInOver" required> Over > Spec
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="overVsSpec" ng-model="overVsSpec" id="incomparable" value="incomparable" required> Incomparable
+                        </label>
+                    </div>
+                </form>
+
+                <button class="btn btn-primary" ng-disabled="!matrixForm.$valid || !specForm.$valid">Validate</button>
+
             </div>
         </div>
-
-        <div class="col-md-6">
-            <h4>Overview vs Specification</h4>
-            <form>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="specVsOver" id="specEqualOver" value="specEqualOver"> Over = Spec
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="specVsOver" id="overInSpec" value="overInSpec"> Over < Spec
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="specVsOver" id="specInOver" value="specInOver"> Over > Spec
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="specVsOver" id="incomparable" value="incomparable"> Incomparable
-                    </label>
-                </div>
-
-            </form>
-            <button class="btn btn-primary" disabled="disabled">Validate</button>
-        </div>
     </div>
-
 }
