@@ -184,8 +184,10 @@ class Application extends Controller {
     Ok(views.html.eval())
   }
 
-  def saveEval = Action {
+  def saveEval = Action { request =>
 
+    val evalResults = request.body.asJson
+    Logger.info(evalResults.toString)
     // TODO : save results
 
     Ok("")

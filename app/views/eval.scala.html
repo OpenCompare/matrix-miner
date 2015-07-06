@@ -11,20 +11,61 @@
         <div class="row">
 
             <div class="col-md-6">
-                <div ng-controller="EditorCtrl" embed-open-compare-editor>
+                <div ng-controller="EditorCtrl" open-compare-editor>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <h4>Feature and cells</h4>
                 <form name="matrixForm">
+                    <!-- Feature -->
                     <div class="radio">
                         <label class="radio-inline">
-                            <input type="radio" name="feature" ng-model="feature" value="correct" required> Correct
+                            <input type="radio" name="feature" ng-model="feature.eval" value="wellformed" required> Well formed
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="feature" ng-model="feature" value="incorrect" required> Incorrect
+                            <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" required> Not meaningful
                         </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" required> Irrelevant
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="feature" ng-model="feature.eval" value="redundant" required> Redundant
+                        </label>
+                    </div>
+
+                    <!-- Cells -->
+                    <div ng-repeat="cell in cells">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input type="radio" name="{{cell}}.eval" ng-model="cell.eval" value="correct" required> Correct
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="{{cell}}.eval" ng-model="cell.eval" value="incorrect" required> Incorrect
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="{{cell}}.eval" ng-model="cell.eval" value="incomplete" required> Incomplete
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="{{cell}}.eval" ng-model="cell.eval" value="missing" required> Missing
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input type="radio" name="{{cell}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" required> Over = Spec
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="{{cell}}.overVsSpec" ng-model="cell.overVsSpec" id="overInSpec" value="overInSpec" required> Over < Spec
+                            </label>
+                            <label>
+                                <input type="radio" name="{{cell}}.overVsSpec" ng-model="cell.overVsSpec" id="specInOver" value="specInOver" required> Over > Spec
+                            </label>
+                            <label>
+                                <input type="radio" name="{{cell}}.overVsSpec" ng-model="cell.overVsSpec" id="incomparable" value="incomparable" required> Incomparable
+                            </label>
+                        </div>
+
                     </div>
                 </form>
             </div>
@@ -65,26 +106,7 @@
                 <h4>Overview vs Specification</h4>
 
                 <form name="specForm">
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="overVsSpec" ng-model="overVsSpec" id="specEqualOver" value="specEqualOver" required> Over = Spec
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="overVsSpec" ng-model="overVsSpec" id="overInSpec" value="overInSpec" required> Over < Spec
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="overVsSpec" ng-model="overVsSpec" id="specInOver" value="specInOver" required> Over > Spec
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="overVsSpec" ng-model="overVsSpec" id="incomparable" value="incomparable" required> Incomparable
-                        </label>
-                    </div>
+
                 </form>
 
                 <button class="btn btn-primary" ng-click="send()" ng-disabled="!matrixForm.$valid || !specForm.$valid">Send</button>
