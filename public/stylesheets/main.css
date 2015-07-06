@@ -8,7 +8,7 @@ body {
     margin-top: 60px;
 }
 
-.navbar {
+.navbar-inverse.navbar {
     background-color: black;
 }
 
@@ -20,7 +20,3 @@ body {
 }
 .navbar-brand {float:none;}
 
-.navbar-inverse .navbar-brand {
-    color: green;
-    font-size: x-large;
-}

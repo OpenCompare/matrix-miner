@@ -178,4 +178,10 @@ class Application extends Controller {
 
   }
 
+
+  def eval = Action {
+
+    Ok(views.html.eval())
+  }
+
 }
