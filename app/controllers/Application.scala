@@ -1,5 +1,7 @@
 package controllers
 
+import java.io.File
+
 import org.opencompare.api.java.impl.PCMFactoryImpl
 import org.opencompare.api.java.impl.io.KMFJSONExporter
 import org.opencompare.api.java.io.CSVLoader
@@ -106,69 +108,7 @@ class Application extends Controller {
         datasetDir + selectedDataset.get.as[String] + "/" + selectedCategory.get.as[String] + "/" + selectedPCM.get.as[String]
       }
 
-      val path = dirPath + "/finalPCM.csv"
-
-      val pcmContainers = csvOverviewLoader.load(Play.getFile(path))
-
-
-      val skuToName = mutable.Map.empty[String, String]
-
-      // Extract overviews from XML dumps
-      val overviewFiles = Play.getFile(dirPath).listFiles().filter(_.getName.endsWith(".xml")).toList
-
-      val bestbuyXML = overviewFiles.map{ f =>
-        val xml = scala.xml.XML.loadString(Source.fromFile(f).mkString)
-        val sku = f.getName.replace(".xml", ".txt")
-        var name = (xml \ "name").head.text
-
-        skuToName.put(sku, name)
-
-        name -> xml
-      }.toMap
-
-      // Treat XML dumps
-      val overviews = bestbuyXML.map { o =>
-        val features = o._2.map(xml => xml \ "features" \ "feature").head
-
-        val overview = features.map { node =>
-          val text = node.text
-          "<strong>" + text.replaceFirst("\n", "</strong><br/>")
-        }
-        (o._1, overview.mkString("<br/>"))
-      }
-
-      val specifications = bestbuyXML.map { bbXML =>
-        val specification = (bbXML._2 \ "details" \ "detail").map { detail =>
-          val name = (detail \ "name").text
-          val value = (detail \ "value").text
-          (name, value)
-        }
-        (bbXML._1, specification)
-      }
-
-      // Rename products in PCM
-      val pcmContainer = pcmContainers.head
-      val pcm = pcmContainer.getPcm
-      for (product <- pcm.getProducts) {
-        product.setName(skuToName(product.getName))
-      }
-
-      // Export to JSON
-      val json = jsonExporter.export(pcmContainer)
-      val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
-      val jsonSpecifications = JsObject(specifications.toSeq.map(o => o._1 -> JsArray(
-        o._2.map(t =>
-          JsObject(Seq(
-            "feature" -> JsString(t._1),
-            "value" -> JsString(t._2)
-          )))
-      )))
-
-      Ok(JsObject(Seq(
-        "pcm" -> Json.parse(json),
-        "overviews" -> jsonOverviews,
-        "specifications" -> jsonSpecifications
-      )))
+      Ok(loadPCM(dirPath))
     } else {
       NotFound("PCM not found")
     }
@@ -177,11 +117,90 @@ class Application extends Controller {
   }
 
 
+  def loadPCM(dirPath : String) : JsValue = {
+    val path = dirPath + "/finalPCM.csv"
+
+    val pcmContainers = csvOverviewLoader.load(Play.getFile(path))
+
+
+    val skuToName = mutable.Map.empty[String, String]
+
+    // Extract overviews from XML dumps
+    val overviewFiles = Play.getFile(dirPath).listFiles().filter(_.getName.endsWith(".xml")).toList
+
+    val bestbuyXML = overviewFiles.map{ f =>
+      val xml = scala.xml.XML.loadString(Source.fromFile(f).mkString)
+      val sku = f.getName.replace(".xml", ".txt")
+      var name = (xml \ "name").head.text
+
+      skuToName.put(sku, name)
+
+      name -> xml
+    }.toMap
+
+    // Treat XML dumps
+    val overviews = bestbuyXML.map { o =>
+      val features = o._2.map(xml => xml \ "features" \ "feature").head
+
+      val overview = features.map { node =>
+        val text = node.text
+        "<strong>" + text.replaceFirst("\n", "</strong><br/>")
+      }
+      (o._1, overview.mkString("<br/>"))
+    }
+
+    val specifications = bestbuyXML.map { bbXML =>
+    val specification = (bbXML._2 \ "details" \ "detail").map { detail =>
+      val name = (detail \ "name").text
+      val value = (detail \ "value").text
+        (name, value)
+      }
+        (bbXML._1, specification)
+    }
+
+    // Rename products in PCM
+    val pcmContainer = pcmContainers.head
+    val pcm = pcmContainer.getPcm
+    for (product <- pcm.getProducts) {
+      product.setName(skuToName(product.getName))
+    }
+
+    // Export to JSON
+    val json = jsonExporter.export(pcmContainer)
+    val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
+    val jsonSpecifications = JsObject(specifications.toSeq.map(o => o._1 -> JsArray(
+      o._2.map(t =>
+      JsObject(Seq(
+      "feature" -> JsString(t._1),
+      "value" -> JsString(t._2)
+      )))
+    )))
+
+    JsObject(Seq(
+      "pcm" -> Json.parse(json),
+      "overviews" -> jsonOverviews,
+      "specifications" -> jsonSpecifications
+    ))
+  }
+
   def eval = Action {
 
     // TODO : select a PCM + feature to evaluate
+    val dirPath = "manual-dataset/Laptops/Filter-Brand-Category/Lenovo-2-in-1/Lenovo1"
 
-    Ok(views.html.eval())
+    Ok(views.html.eval(dirPath))
+  }
+
+  def loadEval(dirPath : String) = Action {
+    val completeDirPath = datasetDir + dirPath
+    val pcmPath = completeDirPath + "/finalPCM.csv"
+
+    if (new File(pcmPath).exists()) {
+      Ok(loadPCM(completeDirPath))
+    } else {
+      NotFound("PCM not found")
+    }
+
   }
 
   def saveEval = Action { request =>

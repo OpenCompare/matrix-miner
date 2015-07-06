@@ -1,5 +1,9 @@
-@main {
+@(dirPath : String)
 
+@main {
+    <script>
+        var dirPath = "@dirPath";
+    </script>
 
     <div ng-controller="EvalCtrl">
 
@@ -11,6 +15,7 @@
         <div class="row">
 
             <div class="col-md-6">
+                <h4>PCM</h4>
                 <div ng-controller="EditorCtrl" open-compare-editor>
                 </div>
             </div>
@@ -67,6 +72,8 @@
                         </div>
 
                     </div>
+
+                    <button class="btn btn-primary" ng-click="send()" ng-disabled="!matrixForm.$valid">Send</button>
                 </form>
             </div>
 
@@ -100,17 +107,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-6">
-                <h4>Overview vs Specification</h4>
-
-                <form name="specForm">
-
-                </form>
-
-                <button class="btn btn-primary" ng-click="send()" ng-disabled="!matrixForm.$valid || !specForm.$valid">Send</button>
-
             </div>
         </div>
     </div>
