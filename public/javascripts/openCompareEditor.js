@@ -7,6 +7,8 @@ var pcmApp = angular.module("openCompare", ['ui.grid', 'ui.grid.edit', 'ui.grid.
 /**
  * Created by gbecan on 17/12/14.
  */
+
+
 pcmApp.controller("EditorCtrl", function($controller, $rootScope, $scope, $http, $timeout, uiGridConstants, $compile, $modal, expandeditor,  $location, pcmApi) {
     if($.material) {
         $.material.init();
@@ -740,13 +742,13 @@ pcmApp.controller("FiltersCtrl", function($rootScope, $scope, $http, $timeout, u
  * Created by hvallee on 6/19/15.
  */
 
-pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeout, uiGridConstants, $location, pcmApi, expandeditor) {
+pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeout, uiGridConstants, $location, pcmApi, expandeditor, typeService, embedService) {
 
     $scope.height = 300;
-    $scope.enableEdit = true;
-    $scope.enableExport = true;
+    $scope.enableEdit = embedService.enableEdit().get;
+    $scope.enableExport = embedService.enableExport().get;
     $scope.enableTitle = true;
-    $scope.enableShare = true;
+    $scope.enableShare = embedService.enableShare().get;
 
     $scope.gridOptions = {
         columnDefs: [],
@@ -1019,7 +1021,11 @@ pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeou
      * Initialize the editor
      * @param pcm
      */
-    $scope.initializeEditor = function(pcm, metadata) {
+    $scope.initializeEditor = function(pcm, metadata, decode) {
+
+        if(decode) {
+            pcm = pcmApi.decodePCM(pcm); // Decode PCM from Base64
+        }
 
         /* Convert PCM model to editor format */
         var features = pcmApi.getConcreteFeatures(pcm);
@@ -1074,7 +1080,7 @@ pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeou
             if(!feature.name){
                 featureName = " ";
             }
-            var colDef = $scope.newColumnDef(featureName, $scope.getType(featureName, $scope.pcmData));
+            var colDef = $scope.newColumnDef(featureName, typeService.getType(featureName, $scope.pcmData));
             columnDefs.push(colDef);
             colIndex++;
         });
@@ -1199,7 +1205,7 @@ pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeou
 /**
  * Created by hvallee on 6/19/15.
  */
-pcmApp.controller("TypesCtrl", function($rootScope, $scope, $http, $timeout, uiGridConstants, $compile, $modal) {
+pcmApp.controller("TypesCtrl", function($rootScope, $scope, $http, $timeout, uiGridConstants, $compile, $modal, typeService) {
 
     // Validate pcm type
     $scope.columnsType = [];
@@ -1231,7 +1237,7 @@ pcmApp.controller("TypesCtrl", function($rootScope, $scope, $http, $timeout, uiG
                 for(var i = 0; i < initValid.length; i++) {
                     var featureName = initValid[i];
                     if(featureName != " ") {
-                        $scope.validation[featureName][index] =  validateType(productData[featureName], $scope.columnsType[featureName]);
+                        $scope.validation[featureName][index] =  typeService.validateType(productData[featureName], $scope.columnsType[featureName]);
                     }
                 }
                 index++;
@@ -1242,81 +1248,7 @@ pcmApp.controller("TypesCtrl", function($rootScope, $scope, $http, $timeout, uiG
     };
 
 
-    /**
-     * Return the type of a column
-     * @param featureName
-     * @returns {string}
-     */
-    $scope.getType = function(featureName, data) {
-        var rowIndex = 0;
-        var isInt = 0;
-        var isBool = 0;
-        var isString = 0;
-        var codedFeatureName = convertStringToEditorFormat(featureName);
-        while(data[rowIndex]) {
-            if(data[rowIndex][codedFeatureName]) {
-                if (!angular.equals(parseInt(data[rowIndex][codedFeatureName]), NaN)) {
-                    isInt++;
-                }
-                else if (isBooleanValue(data[rowIndex][codedFeatureName])) {
-                    isBool++;
-                }
-                else if (!isEmptyCell(data[rowIndex][codedFeatureName])) {
-                    isString++;
-                }
-            }
-            rowIndex++;
-        }
-        var type = "";
-        if(isInt > isBool) {
-            if(isInt > isString) {
-                type = "number";
-            }
-            else {
-                type = "string";
-            }
-        }
-        else if(isBool > isString) {
-            type = "boolean";
-        }
-        else {
-            type = "string";
-        }
-        return type;
-    };
 
-    function validateType (productName, featureType) {
-
-        var type = "";
-        if(!angular.equals(parseInt(productName), NaN)) {
-            type = "number";
-        }
-        else if(isBooleanValue(productName)) {
-            type = "boolean";
-        }
-        else if(!isEmptyCell(productName)){
-            type = "string";
-        }
-        else {
-            type = "none"
-        }
-        if(type == "none") {
-            return true;
-        }
-        else if (featureType == "string") {
-            return true;
-        }
-        else {
-            return type === featureType;
-        }
-    }
-
-
-
-    function isBooleanValue (productName) {
-
-        return((productName.toLowerCase() === "yes") ||  (productName.toLowerCase() === "true") ||  (productName.toLowerCase() === "no") ||  (productName.toLowerCase() === "false"));
-    }
 });
 
 
@@ -1965,10 +1897,51 @@ pcmApp.controller("I18nCtrl", function($scope, $http) {
  */
 
 
-pcmApp.service('opencompareinitializer', function($rootScope) {
+pcmApp.service('embedService', function($rootScope) {
+
     this.initialize = function(data) {
         $rootScope.$broadcast('initializeFromExternalSource', data);
-    }
+    };
+
+    var enableEdit = false;
+    this.enableEdit = function(bool) {
+        return{
+            get: enableEdit,
+            set: function() {
+                enableEdit = bool;
+            }
+        }
+    };
+
+    var enableExport = false;
+    this.enableExport = function(bool) {
+        return{
+            get: enableExport,
+            set: function() {
+                enableExport = bool;
+            }
+        }
+    };
+
+    var enableShare = false;
+    this.enableShare = function(bool) {
+        return{
+            get: enableShare,
+            set: function() {
+                enableShare = bool;
+            }
+        }
+    };
+
+    var setEdit = false;
+    this.setEdit = function(bool) {
+        return{
+            get: setEdit,
+            set: function() {
+                setEdit = bool;
+            }
+        }
+    };
 
 
 });
@@ -2020,6 +1993,83 @@ pcmApp.service('expandeditor', function() {
 
 
 });
+/**
+ * Created by hvallee on 7/6/15.
+ */
+
+
+pcmApp.service('typeService', function() {
+
+    this.getType = function(featureName, data) {
+        var rowIndex = 0;
+        var isInt = 0;
+        var isBool = 0;
+        var isString = 0;
+        var codedFeatureName = convertStringToEditorFormat(featureName);
+        while(data[rowIndex]) {
+            if(data[rowIndex][codedFeatureName]) {
+                if (!angular.equals(parseInt(data[rowIndex][codedFeatureName]), NaN)) {
+                    isInt++;
+                }
+                else if (this.isBooleanValue(data[rowIndex][codedFeatureName])) {
+                    isBool++;
+                }
+                else if (!isEmptyCell(data[rowIndex][codedFeatureName])) {
+                    isString++;
+                }
+            }
+            rowIndex++;
+        }
+        var type = "";
+        if(isInt > isBool) {
+            if(isInt > isString) {
+                type = "number";
+            }
+            else {
+                type = "string";
+            }
+        }
+        else if(isBool > isString) {
+            type = "boolean";
+        }
+        else {
+            type = "string";
+        }
+        return type;
+    };
+
+    this.validateType = function (productName, featureType) {
+
+        var type = "";
+        if(!angular.equals(parseInt(productName), NaN)) {
+            type = "number";
+        }
+        else if(this.isBooleanValue(productName)) {
+            type = "boolean";
+        }
+        else if(!isEmptyCell(productName)){
+            type = "string";
+        }
+        else {
+            type = "none"
+        }
+        if(type == "none") {
+            return true;
+        }
+        else if (featureType == "string") {
+            return true;
+        }
+        else {
+            return type === featureType;
+        }
+    };
+
+    this.isBooleanValue = function (productName) {
+
+        return((productName.toLowerCase() === "yes") ||  (productName.toLowerCase() === "true") ||  (productName.toLowerCase() === "no") ||  (productName.toLowerCase() === "false"));
+    };
+});
+
 /**
  * Created by hvallee on 6/19/15.
  */
