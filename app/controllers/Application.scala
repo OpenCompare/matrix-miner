@@ -181,6 +181,8 @@ class Application extends Controller {
 
   def eval = Action {
 
+    // TODO : select a PCM + feature to evaluate
+
     Ok(views.html.eval())
   }
 
