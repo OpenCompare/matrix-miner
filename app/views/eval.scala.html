@@ -2,6 +2,12 @@
 
 
     <div ng-controller="EvalCtrl">
+
+        <div class="row">
+            <h4>Instructions</h4>
+
+        </div>
+
         <div class="row">
 
             <div class="col-md-6">
@@ -81,7 +87,7 @@
                     </div>
                 </form>
 
-                <button class="btn btn-primary" ng-disabled="!matrixForm.$valid || !specForm.$valid">Validate</button>
+                <button class="btn btn-primary" ng-click="send()" ng-disabled="!matrixForm.$valid || !specForm.$valid">Send</button>
 
             </div>
         </div>

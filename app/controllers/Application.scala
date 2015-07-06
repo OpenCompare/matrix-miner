@@ -20,9 +20,7 @@ class Application extends Controller {
   val jsonExporter = new KMFJSONExporter
 
   def index = Action {
-
     Ok(views.html.index())
-    //Ok(views.html.index(">"))
   }
 
   def list() = Action { request =>
@@ -184,6 +182,13 @@ class Application extends Controller {
     // TODO : select a PCM + feature to evaluate
 
     Ok(views.html.eval())
+  }
+
+  def saveEval = Action {
+
+    // TODO : save results
+
+    Ok("")
   }
 
 }
