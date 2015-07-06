@@ -1004,8 +1004,8 @@ pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeou
                 var columnFilterValue = $scope.columnsFilters[codedFeatureName];
                 columnDef.filterHeaderTemplate="" +
                     "<div class='ui-grid-filter-container'>" +
-                    "<button class='btn btn-primary btn-xs' ng-class='{\"btn btn-primary btn-xs \" : grid.appScope.isFilterOn(col) == 1, \"btn btn-flat btn-primary btn-xs\": grid.appScope.isFilterOn(col) != 1}' ng-click='grid.appScope.applyBooleanFilter(col, 1)' >Yes</button>" +
-                    "<button class='btn btn-danger btn-flat' ng-class='{\"btn btn-danger btn-xs \" : grid.appScope.isFilterOn(col) == 2, \"btn btn-flat btn-danger btn-xs\": grid.appScope.isFilterOn(col) != 2}' btn-xs' ng-click='grid.appScope.applyBooleanFilter(col, 2)' >No</button>" +
+                    "<button class='btn btn-primary btn-sm' ng-class='{\"btn btn-primary btn-sm \" : grid.appScope.isFilterOn(col) == 1, \"btn btn-flat btn-primary btn-sm\": grid.appScope.isFilterOn(col) != 1}' ng-click='grid.appScope.applyBooleanFilter(col, 1)' ><i class='fa fa-check-circle'></i></button>" +
+                    "<button class='btn btn-danger btn-flat' ng-class='{\"btn btn-danger btn-sm \" : grid.appScope.isFilterOn(col) == 2, \"btn btn-flat btn-danger btn-sm\": grid.appScope.isFilterOn(col) != 2}' btn-xs' ng-click='grid.appScope.applyBooleanFilter(col, 2)' ><i class='fa fa-times-circle'></i></button>" +
                     "</div>";
                 columnDef.filter.noTerm = true;
                 columnDef.filter.condition = function (searchTerm,  cellValue) {
@@ -2278,7 +2278,7 @@ pcmApp.service('typeService', function() {
 
     pcmApp.directive('embedOpenCompareEditor', function() {
         return {
-            templateUrl: '/assets/templates/pcmEditor.html'
+            templateUrl: 'pcmEditor.html'
         };
     });/**
  * Created by smangin on 19/05/15.
