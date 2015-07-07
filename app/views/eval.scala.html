@@ -41,8 +41,7 @@
 
                     <!-- Cells -->
                     <div ng-repeat="cell in cells">
-                        @*<div class="radio">*@
-                        <div>
+                        <div class="radio">
                             <label class="radio-inline">
                                 <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="correct" required> Correct
                             </label>
@@ -56,10 +55,8 @@
                                 <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="missing" required> Missing
                             </label>
                         </div>
-                        @*</div>*@
 
-                        @*<div class="radio">*@
-                        <div>
+                        <div class="radio">
                             <label class="radio-inline">
                                 <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" required> Over = Spec
                             </label>
@@ -73,7 +70,6 @@
                                 <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="incomparable" value="incomparable" required> Incomparable
                             </label>
                         </div>
-                        @*</div>*@
 
                     </div>
 

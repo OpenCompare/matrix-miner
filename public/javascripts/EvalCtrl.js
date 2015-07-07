@@ -39,7 +39,7 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
 
         pcm.products.array.forEach(function (product) {
             $scope.cells.push({
-                name: "tata",
+                name: "prod_" + base64.encode(product.name),
                 product : product.name
             });
         });

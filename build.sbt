@@ -24,6 +24,7 @@ libraryDependencies ++= Seq(
   "org.opencompare" % "api-java" % "0.4-SNAPSHOT",
   "org.opencompare" % "api-java-impl" % "0.4-SNAPSHOT",
   "org.webjars.bower" % "angular-utf8-base64" % "0.0.5" exclude("org.webjars.bower", "angular"),
+  "org.webjars.bower" % "angular-utf8-base64" % "0.0.5" exclude("org.webjars.bower", "angular"),
   jdbc,
   cache,
   ws,
