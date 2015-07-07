@@ -1,4 +1,4 @@
-@(dirPath : String)
+@(dirPath : String, evaluatedFeature : String)
 
 @main {
     <script>
@@ -14,13 +14,43 @@
 
         <div class="row">
 
-            <div class="col-md-6">
-                <h4>PCM</h4>
-                <div ng-controller="EditorCtrl" open-compare-editor>
+            <div class="col-md-8" >
+                <div class="row" ng-controller="EditorSelectionCtrl">
+                    <h4>PCM</h4>
+                    <div ng-controller="EditorCtrl" open-compare-editor>
+                    </div>
                 </div>
+
+                <div class="row">
+                        <div class="col-md-6">
+                            <div ng-controller="OverviewController">
+                                <h4>Textual overview</h4>
+                                <div highlight="text" keywords="keywords" highlight-class="highlight">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div ng-controller="SpecificationController">
+                                <h4>Specification</h4>
+                                <table class="table">
+                                    <tr>
+                                        <th>Feature</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    <tr ng-repeat="row in specification | filter:filterFeature">
+                                        <td>{{row.feature}}</td>
+                                        <td>{{row.value}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                </div>
+
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <h4>Feature and cells</h4>
                 <form name="matrixForm">
                     <!-- Feature -->
@@ -79,35 +109,5 @@
 
         </div>
 
-
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="col-md-6">
-                    <div ng-controller="OverviewController">
-                        <h4>Textual overview</h4>
-                        <div highlight="text" keywords="keywords" highlight-class="highlight">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-
-                    <div ng-controller="SpecificationController">
-                        <h4>Specification</h4>
-                        <table class="table">
-                            <tr>
-                                <th>Feature</th>
-                                <th>Value</th>
-                            </tr>
-                            <tr ng-repeat="row in specification | filter:filterFeature">
-                                <td>{{row.feature}}</td>
-                                <td>{{row.value}}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 }

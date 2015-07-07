@@ -131,8 +131,8 @@ class Application extends Controller {
     val bestbuyXML = overviewFiles.map{ f =>
       val xml = scala.xml.XML.loadString(Source.fromFile(f).mkString)
       val sku = f.getName.replace(".xml", ".txt")
-      var name = (xml \ "name").head.text
-
+//      var name = (xml \ "name").head.text
+      var name = (xml \ "sku").head.text
       skuToName.put(sku, name)
 
       name -> xml
@@ -158,11 +158,16 @@ class Application extends Controller {
         (bbXML._1, specification)
     }
 
-    // Rename products in PCM
+
     val pcmContainer = pcmContainers.head
     val pcm = pcmContainer.getPcm
+
+    // Rename products in PCM
+//    for (product <- pcm.getProducts) {
+//      product.setName(skuToName(product.getName))
+//    }
     for (product <- pcm.getProducts) {
-      product.setName(skuToName(product.getName))
+        product.setName(product.getName.substring(0, product.getName.size - 4))
     }
 
     // Export to JSON
@@ -187,8 +192,9 @@ class Application extends Controller {
 
     // TODO : select a PCM + feature to evaluate
     val dirPath = "manual-dataset/Laptops/Filter-Brand-Category/Lenovo-2-in-1/Lenovo1"
+    val evaluatedFeature = "access"
 
-    Ok(views.html.eval(dirPath))
+    Ok(views.html.eval(dirPath, evaluatedFeature))
   }
 
   def loadEval(dirPath : String) = Action {
