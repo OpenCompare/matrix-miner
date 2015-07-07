@@ -19,9 +19,11 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     $scope.cells = [];
 
     // Load PCM
-    $http.get("/eval/load/" + dirPath).success(function (data) {
+    $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName).success(function (data) {
         // Initialize other controllers
-        embedService.initialize(data); // TODO : display only the necessary feature
+        embedService.initialize({
+            pcm: data.pcm
+        }); // TODO : display only the necessary feature
         $rootScope.$broadcast("overviews", data.overviews);
         $rootScope.$broadcast("specifications", data.specifications);
 
@@ -29,13 +31,8 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
         var pcm = loader.loadModelFromString(JSON.stringify(data.pcm)).array[0];
         pcmApi.decodePCM(pcm);
 
-
-        pcm.features.array.forEach(function (feature) {
-            // TODO : display only the necessary feature
-            //if (feature.name === evaluatedFeature) {
-                $scope.feature.name = feature.name;
-            //}
-        });
+        var evaluatedFeature = pcm.features.array[0];
+        $scope.feature.name = evaluatedFeature.name;
 
         pcm.products.array.forEach(function (product) {
             $scope.cells.push({
@@ -43,6 +40,9 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
                 product : product.name
             });
         });
+
+
+
     });
 
     $scope.send = function() {

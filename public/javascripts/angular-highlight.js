@@ -26,10 +26,10 @@ angular.module('angular-highlight', []).directive('highlight', function() {
 				return false;
 			}
 			
-			
+
 			var tokenized	= tokenize(scope.keywords);
 			var regex 		= new RegExp(tokenized.join('|'), 'gmi');
-			
+
 			// Find the words
 			var html = scope.highlight.replace(regex, replacer);
 

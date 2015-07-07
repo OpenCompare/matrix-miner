@@ -9,7 +9,7 @@ POST        /load                 controllers.Application.load
 
 # Evaluation
 GET         /eval                 controllers.Application.eval
-GET         /eval/load/*dirPath   controllers.Application.loadEval(dirPath : String)
+GET         /eval/load/*dirPath/:evaluatedFeatureName   controllers.Application.loadEval(dirPath : String, evaluatedFeatureName : String)
 POST        /eval/save            controllers.Application.saveEval
 
 

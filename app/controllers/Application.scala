@@ -117,7 +117,7 @@ class Application extends Controller {
   }
 
 
-  def loadPCM(dirPath : String) : JsValue = {
+  def loadPCM(dirPath : String, evaluatedFeatureName : Option[String] = None) : JsValue = {
     val path = dirPath + "/finalPCM.csv"
 
     val pcmContainers = csvOverviewLoader.load(Play.getFile(path))
@@ -170,6 +170,20 @@ class Application extends Controller {
         product.setName(product.getName.substring(0, product.getName.size - 4))
     }
 
+    // Remove features if necessary
+    if (evaluatedFeatureName.isDefined) {
+      val featuresToRemove = pcm.getConcreteFeatures.filterNot(_.getName == evaluatedFeatureName.get).toList
+      featuresToRemove.foreach(pcm.removeFeature(_))
+
+      for (product <- pcm.getProducts) {
+        for (cell <- product.getCells) {
+          if (featuresToRemove.contains(cell.getFeature)) {
+            product.removeCell(cell)
+          }
+        }
+      }
+    }
+
     // Export to JSON
     val json = jsonExporter.export(pcmContainer)
     val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
@@ -192,17 +206,17 @@ class Application extends Controller {
 
     // TODO : select a PCM + feature to evaluate
     val dirPath = "manual-dataset/Laptops/Filter-Brand-Category/Lenovo-2-in-1/Lenovo1"
-    val evaluatedFeature = "access"
+    val evaluatedFeatureName = "access"
 
-    Ok(views.html.eval(dirPath, evaluatedFeature))
+    Ok(views.html.eval(dirPath, evaluatedFeatureName))
   }
 
-  def loadEval(dirPath : String) = Action {
+  def loadEval(dirPath : String, evaluatedFeatureName : String) = Action {
     val completeDirPath = datasetDir + dirPath
     val pcmPath = completeDirPath + "/finalPCM.csv"
 
     if (new File(pcmPath).exists()) {
-      Ok(loadPCM(completeDirPath))
+      Ok(loadPCM(completeDirPath, Some(evaluatedFeatureName)))
     } else {
       NotFound("PCM not found")
     }

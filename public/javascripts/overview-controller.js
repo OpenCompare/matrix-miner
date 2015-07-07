@@ -10,7 +10,7 @@ matrixMinerApp.controller("OverviewController", function($rootScope, $scope, $ht
 
     $scope.$on('selection', function(event, product, feature, cell) {
         $scope.text = $scope.overviews[product];
-        if (cell === "YES" || cell === "NO") {
+        if (cell === "YES" || cell === "NO" || /^\s*$/.test(cell)) {
             $scope.keywords = feature;
         } else {
             $scope.keywords = feature + ", " + cell;
