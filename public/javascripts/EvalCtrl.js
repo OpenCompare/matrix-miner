@@ -60,6 +60,17 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
             .error(function (data) {
                 console.log("an error occured while sending evaluation results")
             });
-    }
+    };
 
+    $scope.allCorrect = function() {
+        $scope.cells.forEach(function (cell) {
+           cell.eval = "correct"
+        });
+    };
+
+    $scope.allEqual = function() {
+        $scope.cells.forEach(function (cell) {
+            cell.overVsSpec = "specEqualOver"
+        });
+    };
 });

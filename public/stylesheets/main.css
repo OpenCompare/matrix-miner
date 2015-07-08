@@ -19,3 +19,7 @@ body {
     width: 100%;
 }
 .navbar-brand {float:none;}
+
+.btn {
+    text-transform: none;
+}
