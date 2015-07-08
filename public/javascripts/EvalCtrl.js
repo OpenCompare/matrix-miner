@@ -29,14 +29,13 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
 
         // Prepare evaluation
         var pcm = loader.loadModelFromString(JSON.stringify(data.pcm)).array[0];
-        pcmApi.decodePCM(pcm);
 
         var evaluatedFeature = pcm.features.array[0];
         $scope.feature.name = evaluatedFeature.name;
 
         pcm.products.array.forEach(function (product) {
             $scope.cells.push({
-                name: "prod_" + base64.encode(product.name),
+                name: "prod_" + product.name,
                 product : product.name
             });
         });
