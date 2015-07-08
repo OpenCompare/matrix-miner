@@ -8,6 +8,7 @@ import java.util.function.Predicate
 import java.util.stream.Collectors
 
 import com.sun.xml.internal.bind.api.impl.NameConverter.Standard
+import model.EvaluationResultRecorder
 import org.opencompare.api.java.impl.PCMFactoryImpl
 import org.opencompare.api.java.impl.io.KMFJSONExporter
 import org.opencompare.api.java.io.CSVLoader
@@ -23,6 +24,7 @@ import scala.util.Random
 
 class Application extends Controller {
 
+  val evaluationResultRecorder = new EvaluationResultRecorder
   val datasetDir = "datasets/"
   val factory = new PCMFactoryImpl
   val csvOverviewLoader = new CSVLoader(factory, ';', '"', false)
@@ -250,10 +252,13 @@ class Application extends Controller {
   def saveEval = Action { request =>
 
     val evalResults = request.body.asJson
-    Logger.info(evalResults.toString)
-    // TODO : save results
+    if (evalResults.isDefined) {
+      evaluationResultRecorder.record(evalResults.get)
+      Ok("")
+    } else {
+      BadRequest("")
+    }
 
-    Ok("")
   }
 
 }
