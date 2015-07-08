@@ -8,9 +8,9 @@ POST        /list                 controllers.Application.list
 POST        /load                 controllers.Application.load
 
 # Evaluation
-GET         /eval                 controllers.Application.eval
+GET         /eval                                       controllers.Application.eval
 GET         /eval/load/*dirPath/:evaluatedFeatureName   controllers.Application.loadEval(dirPath : String, evaluatedFeatureName : String)
-POST        /eval/save            controllers.Application.saveEval
+POST        /eval/save                                  controllers.Application.saveEval
 
 
 # Map static resources from the /public folder to the /assets URL path

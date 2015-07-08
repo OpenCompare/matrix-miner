@@ -1,7 +1,13 @@
 package controllers
 
 import java.io.File
+import java.net.{URI, URLDecoder}
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Paths, Path, Files}
+import java.util.function.Predicate
+import java.util.stream.Collectors
 
+import com.sun.xml.internal.bind.api.impl.NameConverter.Standard
 import org.opencompare.api.java.impl.PCMFactoryImpl
 import org.opencompare.api.java.impl.io.KMFJSONExporter
 import org.opencompare.api.java.io.CSVLoader
@@ -13,6 +19,7 @@ import play.libs.XML
 import collection.JavaConversions._
 import scala.collection.mutable
 import scala.io.Source
+import scala.util.Random
 
 class Application extends Controller {
 
@@ -20,6 +27,18 @@ class Application extends Controller {
   val factory = new PCMFactoryImpl
   val csvOverviewLoader = new CSVLoader(factory, ';', '"', false)
   val jsonExporter = new KMFJSONExporter
+
+  val pcms : List[Path] = listPCMs()
+
+  def listPCMs() : List[Path] = {
+    val datasetPath = Paths.get(datasetDir)
+
+    (for (path <- Files.walk(datasetPath).collect(Collectors.toList()) if path.endsWith("finalPCM.csv")) yield {
+      val dir = path.getParent
+      dir
+    }).toList
+
+  }
 
   def index = Action {
     Ok(views.html.index())
@@ -204,19 +223,24 @@ class Application extends Controller {
 
   def eval = Action {
 
-    // TODO : select a PCM + feature to evaluate
-    val dirPath = "manual-dataset/Laptops/Filter-Brand-Category/Lenovo-2-in-1/Lenovo1"
-    val evaluatedFeatureName = "access"
+    // Select a PCM to evaluate
+    val dirPath = Random.shuffle(pcms).head.toString
+
+    // Select a feature to evaluate
+    val pcmContainers = csvOverviewLoader.load(Play.getFile(dirPath + "/finalPCM.csv"))
+    val pcm = pcmContainers.head.getPcm
+    val features = pcm.getConcreteFeatures.toList
+    val evaluatedFeatureName = Random.shuffle(features).head.getName
 
     Ok(views.html.eval(dirPath, evaluatedFeatureName))
   }
 
   def loadEval(dirPath : String, evaluatedFeatureName : String) = Action {
-    val completeDirPath = datasetDir + dirPath
-    val pcmPath = completeDirPath + "/finalPCM.csv"
+    val decodedDirPath = new URI(dirPath).getPath
+    val pcmPath = decodedDirPath + "/finalPCM.csv"
 
     if (new File(pcmPath).exists()) {
-      Ok(loadPCM(completeDirPath, Some(evaluatedFeatureName)))
+      Ok(loadPCM(decodedDirPath, Some(evaluatedFeatureName)))
     } else {
       NotFound("PCM not found")
     }
