@@ -4,6 +4,7 @@ import java.io.File
 import java.net.{URI, URLDecoder}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Paths, Path, Files}
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Predicate
 import java.util.stream.Collectors
 
@@ -32,6 +33,7 @@ class Application extends Controller {
   val jsonExporter = new KMFJSONExporter
 
   val featuresToEvaluate : List[(Path, String)] = listFeaturesToEvaluate()
+  var indexFeatureToEvaluate = 0
 
   def isBooleanFeature(feature : Feature) : Boolean = {
     feature.getCells.forall(c => Set("yes", "no").contains(c.getContent.toLowerCase))
@@ -238,9 +240,16 @@ class Application extends Controller {
   def eval = Action {
 
     // Select a PCM to evaluate
-    val (dirPath, evaluatedFeatureName) = Random.shuffle(featuresToEvaluate).head
-    Logger.info("evaluating : " + dirPath.toString + " - " + evaluatedFeatureName)
+    val (dirPath, evaluatedFeatureName) = this.synchronized {
+      val featureToEvaluate = featuresToEvaluate.get(indexFeatureToEvaluate)
+      indexFeatureToEvaluate += 1
+      if (indexFeatureToEvaluate == featuresToEvaluate.size) {
+        indexFeatureToEvaluate = 0
+      }
+      featureToEvaluate
+    }
 
+    Logger.info("evaluating : " + dirPath.toString + " - " + evaluatedFeatureName)
     Ok(views.html.eval(dirPath.toString, evaluatedFeatureName))
   }
 
