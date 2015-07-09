@@ -277,4 +277,16 @@ class Application extends Controller {
 
   }
 
+  def extractFeatureResults = Action {
+    val results = evaluationResultRecorder.getFeatureResults()
+    val resultsInCSV = results.map(_.mkString(",")).mkString("\n")
+    Ok(resultsInCSV)
+  }
+
+  def extractCellResults = Action {
+    val results = evaluationResultRecorder.getCellResults()
+    val resultsInCSV = results.map(_.mkString(",")).mkString("\n")
+    Ok(resultsInCSV)
+  }
+
 }
