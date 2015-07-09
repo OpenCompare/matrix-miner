@@ -6,7 +6,7 @@
         var evaluatedFeatureName = "@evaluatedFeatureName";
     </script>
 
-    <div ng-controller="EvalCtrl">
+    <div ng-controller="EvalCtrl" class="container-fluid">
 
         <div class="row">
             <h4>Instructions</h4>
@@ -15,64 +15,45 @@
 
         <div class="row">
 
-            <div class="col-md-8" >
+            <div class="col-md-6">
                 <div class="row" ng-controller="EditorSelectionCtrl">
                     <h4>PCM</h4>
                     <div ng-controller="EditorCtrl" open-compare-editor>
                     </div>
                 </div>
-
-                <div class="row">
-                        <div class="col-md-6">
-                            <div ng-controller="OverviewController">
-                                <h4>Textual overview</h4>
-                                <div highlight="text" keywords="keywords" highlight-class="highlight">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-
-                            <div ng-controller="SpecificationController">
-                                <h4>Specification</h4>
-                                <table class="table">
-                                    <tr>
-                                        <th>Feature</th>
-                                        <th>Value</th>
-                                    </tr>
-                                    <tr ng-repeat="row in specification | filter:filterFeature">
-                                        <td>{{row.feature}}</td>
-                                        <td>{{row.value}}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                </div>
-
             </div>
 
-            <div class="col-md-4">
-                <h4>Feature and cells</h4>
-                <form name="matrixForm">
+            <div class="col-md-6" class="panel panel-default">
+                <form name="matrixForm" class="form-horizontal panel-body">
+                    <fieldset>
+                        <legend>Evaluation</legend>
+                        <br />
                     <!-- Feature -->
-                    <div class="radio">
-                        <label class="radio-inline">
-                            <input type="radio" name="feature" ng-model="feature.eval" value="wellformed" required> Well formed
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" required> Not meaningful
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" required> Irrelevant
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="feature" ng-model="feature.eval" value="redundant" required> Redundant
-                        </label>
-                    </div>
+                        <div class="form-group">
+                            <label for="feature">Feature:</label>
+                            <div class="radio" name="feature">
+                                <label class="radio-inline">
+                                    <input type="radio" name="feature" ng-model="feature.eval" value="wellformed" required> Well formed
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" required> Not meaningful
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" required> Irrelevant
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="feature" ng-model="feature.eval" value="redundant" required> Redundant
+                                </label>
+                            </div>
+                        </div>
+
 
                     <!-- Cells -->
-                    <div ng-repeat="cell in cells | filter:getSelected" id="{{cell.name}}">
-                        <div class="radio">
+                    <div class="form-group" ng-repeat="cell in cells | filter:getSelected" id="{{cell.name}}">
+                        <label for="feature">Product {{cell.product}}:</label>
+                        <br />
+                        <label for="featureValue" style="margin-left: 10px;"><i>Value:</i></label>
+                        <div class="radio" name="featureValue">
                             <label class="radio-inline">
                                 <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="correct" required> Correct
                             </label>
@@ -86,8 +67,8 @@
                                 <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="missing" required> Missing
                             </label>
                         </div>
-
-                        <div class="radio">
+                        <label for="overVsSpec" style="margin-left: 10px;"><i>Overview VS Specification:</i></label>
+                        <div class="radio" name="overVsSpec">
                             <label class="radio-inline">
                                 <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" required> Over = Spec
                             </label>
@@ -103,15 +84,49 @@
                         </div>
 
                     </div>
+                        <div class="col-lg-offset-3">
+                            <button class="btn btn-primary" ng-click="previous()" ng-disabled="index <= 0"><i class="fa fa-chevron-left"></i></button>
+                            <i>{{index}}/10</i>
+                            <button class="btn btn-primary" ng-click="next()" ng-disabled="!matrixForm.$valid || index >= 10"><i class="fa fa-chevron-right"></i></button>
+                            <br />
+                        </div>
+                        <div class="col-lg-offset-8">
+                        <button class="btn btn-primary" ng-click="send()" ng-disabled="index != 10">Send</button>
+                        </div>
 
-                    <button class="btn btn-default" ng-click="allCorrect()">All correct</button>
-                    <button class="btn btn-default" ng-click="allEqual()">All Over = Spec</button>
-                    <br/>
-                    <button class="btn btn-primary" ng-click="send()" ng-disabled="!matrixForm.$valid">Send</button>
+                    </fieldset>
                 </form>
             </div>
 
         </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div ng-controller="OverviewController">
+                        <h4>Textual overview</h4>
+                        <div highlight="text" keywords="keywords" highlight-class="highlight">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+
+                    <div ng-controller="SpecificationController">
+                        <h4>Specification</h4>
+                        <table class="table">
+                            <tr>
+                                <th>Feature</th>
+                                <th>Value</th>
+                            </tr>
+                            <tr ng-repeat="row in specification | filter:filterFeature">
+                                <td>{{row.feature}}</td>
+                                <td>{{row.value}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
 
     </div>
 }

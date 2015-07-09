@@ -18,6 +18,7 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     $scope.feature = {};
     $scope.cells = [];
     $scope.selected = '';
+    $scope.index = 1;
 
     // Load PCM
     $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName).success(function (data) {
@@ -70,6 +71,14 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
         $scope.cells.forEach(function (cell) {
             cell.overVsSpec = "specEqualOver"
         });
+    };
+
+    $scope.previous = function() {
+        $scope.index--;
+    };
+
+    $scope.next = function() {console.log("called");
+        $scope.index++;
     };
 
     $scope.getSelected = function(cell) {console.log(cell.name);
