@@ -2,7 +2,7 @@
  * Created by gbecan on 7/6/15.
  */
 
-matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $window, embedService, base64, pcmApi) {
+matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $window, $timeout, embedService, base64, pcmApi) {
 
     // Configure OpenCompare editor
     embedService.enableEdit(false).set();
@@ -18,10 +18,45 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     $scope.feature = {};
     $scope.cells = [];
     $scope.selected = '';
-    $scope.index = 1;
+    $scope.index = 0;
+    $scope.completed = 0;
+    var slider = document.getElementById('slider');
+
+    noUiSlider.create(slider, {
+        start: 1, // Handle start position
+        step: 1, // Slider moves in increments of '10'
+        connect: 'lower',
+        range: { // Slider can select '0' to '100'
+            'min': 1,
+            'max': 5
+        }
+    });
+
+    var tipHandles = slider.getElementsByClassName('noUi-handle'),
+        tooltips = [];console.log(tooltips);
+
+    // Add divs to the slider handles.
+    for ( var i = 0; i < tipHandles.length; i++ ){
+        tooltips[i] = document.createElement('div');
+        tipHandles[i].appendChild(tooltips[i]);
+    }
+    console.log(tooltips);
+    // Add a class for styling
+    tooltips[0].className += 'tooltip';
+// Add additional markup
+    tooltips[0].innerHTML = '<span></span>';
+// Replace the tooltip reference with the span we just added
+    tooltips[0] = tooltips[0].getElementsByTagName('span')[0];
+
+// When the slider changes, write the value to the tooltips.
+    slider.noUiSlider.on('update', function( values, handle ){
+        tooltips[handle].innerHTML =  parseInt(values[handle]);
+    });
+
 
     // Load PCM
-    $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName).success(function (data) {
+    $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName)
+        .success(function (data) {
         // Initialize other controllers
         embedService.initialize({
             pcm: data.pcm
@@ -41,7 +76,7 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
                 product : product.name
             });
         });
-    });
+        });
 
     $scope.send = function() {
 
@@ -88,5 +123,9 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
 
     $scope.$on('selection', function(event, product, feature, cell) {
         $scope.selected = "prod_"+product;
+    });
+
+    $scope.$watch('matrixForm.$valid', function(newVal, oldVal) {
+        console.log(newVal);
     });
 });

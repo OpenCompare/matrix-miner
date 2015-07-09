@@ -23,3 +23,50 @@ body {
 .btn {
     text-transform: none;
 }
+
+#slider .sample1, #slider .sample2 {
+    padding: 20px 0;
+    background-color: #f0f0f0;
+    margin-bottom: 20px;
+}
+#slider .sample2 {
+    height: 150px;
+}
+#slider .sample2 .slider {
+    margin: 0 40px;
+}
+#slider h2 {
+    padding: 14px;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+}
+#slider .slider {
+    margin: 15px;
+}
+
+.tooltip {
+    display: block;
+    position: absolute;
+    border: 1px solid #D9D9D9;
+    font: 400 12px/12px Arial;
+    border-radius: 3px;
+    background: #fff;
+    top: 10px;
+    padding: 5px;
+    left: -10px;
+    text-align: center;
+    width: 30px;
+}
+.tooltip strong {
+    display: block;
+    padding: 2px;
+}
+
+.subFormGroup {
+    margin-left: 15px;
+}
+.subLabel {
+    font-weight:200;
+    margin-left: 15px;
+}
