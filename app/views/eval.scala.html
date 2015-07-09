@@ -71,7 +71,7 @@
                     </div>
 
                     <!-- Cells -->
-                    <div ng-repeat="cell in cells">
+                    <div ng-repeat="cell in cells | filter:getSelected" id="{{cell.name}}">
                         <div class="radio">
                             <label class="radio-inline">
                                 <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="correct" required> Correct
