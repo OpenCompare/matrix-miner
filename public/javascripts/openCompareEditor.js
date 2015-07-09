@@ -89,6 +89,10 @@ pcmApp.controller("EditorCtrl", function($controller, $rootScope, $scope, $http,
         $scope.initializeEditor($scope.pcm, $scope.metadata);
     });
 
+    $scope.$on('goToCell', function(event, args) {
+        $scope.scrollToFocus(args.row, args.col);
+    });
+
     $scope.setGridHeight = function() {
 
         if($scope.pcmData) {
@@ -1942,6 +1946,11 @@ pcmApp.service('embedService', function($rootScope) {
             }
         }
     };
+
+    this.goToCell = function(row, col)
+    {
+        $rootScope.$broadcast('goToCell', {row: row, col: col});
+    }
 
 
 });

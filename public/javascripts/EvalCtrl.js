@@ -26,7 +26,6 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
         embedService.initialize({
             pcm: data.pcm
         }); // TODO : display only the necessary feature
-
         $rootScope.$broadcast("overviews", data.overviews);
         $rootScope.$broadcast("specifications", data.specifications);
 
@@ -75,13 +74,15 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
 
     $scope.previous = function() {
         $scope.index--;
+        embedService.goToCell($scope.index-1, 2);
     };
 
-    $scope.next = function() {console.log("called");
+    $scope.next = function() {
+        embedService.goToCell($scope.index, 2);
         $scope.index++;
     };
 
-    $scope.getSelected = function(cell) {console.log(cell.name);
+    $scope.getSelected = function(cell) {
         return cell.name == $scope.selected;
     };
 
