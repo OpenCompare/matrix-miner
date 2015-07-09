@@ -4,11 +4,13 @@ import java.io.File
 import java.net.{URI, URLDecoder}
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Paths, Path, Files}
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Predicate
 import java.util.stream.Collectors
 
 import com.sun.xml.internal.bind.api.impl.NameConverter.Standard
 import model.EvaluationResultRecorder
+import org.opencompare.api.java.Feature
 import org.opencompare.api.java.impl.PCMFactoryImpl
 import org.opencompare.api.java.impl.io.KMFJSONExporter
 import org.opencompare.api.java.io.CSVLoader
@@ -30,16 +32,28 @@ class Application extends Controller {
   val csvOverviewLoader = new CSVLoader(factory, ';', '"', false)
   val jsonExporter = new KMFJSONExporter
 
-  val pcms : List[Path] = listPCMs()
+  val featuresToEvaluate : List[(Path, String)] = listFeaturesToEvaluate()
+  var indexFeatureToEvaluate = 0
 
-  def listPCMs() : List[Path] = {
+  def isBooleanFeature(feature : Feature) : Boolean = {
+    feature.getCells.forall(c => Set("yes", "no").contains(c.getContent.toLowerCase))
+  }
+
+  def listFeaturesToEvaluate() : List[(Path, String)] = {
     val datasetPath = Paths.get(datasetDir)
 
-    (for (path <- Files.walk(datasetPath).collect(Collectors.toList()) if path.endsWith("finalPCM.csv")) yield {
+    val allFeaturesToEvaluate = for (path <- Files.walk(datasetPath).collect(Collectors.toList()) if path.endsWith("finalPCM.csv")) yield {
       val dir = path.getParent
-      dir
-    }).toList
+      val pcm = csvOverviewLoader.load(Play.getFile(path.toString)).head.getPcm
 
+      val featuresToEvaluateInPCM = for (feature <- pcm.getConcreteFeatures if !isBooleanFeature(feature)) yield {
+        (dir, feature.getName)
+      }
+
+      featuresToEvaluateInPCM
+    }
+
+    allFeaturesToEvaluate.flatten.toList
   }
 
   def index = Action {
@@ -226,15 +240,17 @@ class Application extends Controller {
   def eval = Action {
 
     // Select a PCM to evaluate
-    val dirPath = Random.shuffle(pcms).head.toString
+    val (dirPath, evaluatedFeatureName) = this.synchronized {
+      val featureToEvaluate = featuresToEvaluate.get(indexFeatureToEvaluate)
+      indexFeatureToEvaluate += 1
+      if (indexFeatureToEvaluate == featuresToEvaluate.size) {
+        indexFeatureToEvaluate = 0
+      }
+      featureToEvaluate
+    }
 
-    // Select a feature to evaluate
-    val pcmContainers = csvOverviewLoader.load(Play.getFile(dirPath + "/finalPCM.csv"))
-    val pcm = pcmContainers.head.getPcm
-    val features = pcm.getConcreteFeatures.toList
-    val evaluatedFeatureName = Random.shuffle(features).head.getName
-
-    Ok(views.html.eval(dirPath, evaluatedFeatureName))
+    Logger.info("evaluating : " + dirPath.toString + " - " + evaluatedFeatureName)
+    Ok(views.html.eval(dirPath.toString, evaluatedFeatureName))
   }
 
   def loadEval(dirPath : String, evaluatedFeatureName : String) = Action {
