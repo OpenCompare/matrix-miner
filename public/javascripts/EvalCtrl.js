@@ -114,25 +114,27 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
 
     $scope.getFirstUnevaluatedProduct = function(){
         var found = false;
-        var i = 0;
+        var i = -1;
         while(i < $scope.cells.length && !found) {
-            if($scope.cells[i] && $scope.cells[i].evaluated == false) {
+            if($scope.cells[i]) {
+                i++;
+                if($scope.cells[i].evaluated == false) {
+                    found = true;
+                    break;
+                }
+            }
+            else{
                 found = true;
                 break;
             }
-            i++;
+
         }
-        if(found) {
-            return i;
-        }
-        else{
-            return false;
-        }
+        return i;
     };
 
     $scope.$on('selection', function(event, product, feature, cell) {
         $scope.selected = "prod_"+product;
-        $scope.index =  $scope.getIndex($scope.selected);console.log($scope.index);
+        $scope.index =  $scope.getIndex($scope.selected);
         if($scope.index == 0) {
             embedService.goToCell(0, 2); // First focus on the grid is automatically set on the first row, only way found.
         }
