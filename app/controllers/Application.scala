@@ -280,13 +280,13 @@ class Application extends Controller {
   def extractFeatureResults = Action {
     val results = evaluationResultRecorder.getFeatureResults()
     val resultsInCSV = results.map(_.mkString(",")).mkString("\n")
-    Ok(resultsInCSV)
+    Ok(resultsInCSV).as("application/x-download")
   }
 
   def extractCellResults = Action {
     val results = evaluationResultRecorder.getCellResults()
     val resultsInCSV = results.map(_.mkString(",")).mkString("\n")
-    Ok(resultsInCSV)
+    Ok(resultsInCSV).as("application/x-download")
   }
 
 }
