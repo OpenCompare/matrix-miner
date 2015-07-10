@@ -18,41 +18,9 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     $scope.feature = {};
     $scope.cells = [];
     $scope.selected = '';
-    $scope.index = 0;
+    $scope.index = -1;
     $scope.completed = 0;
-    var slider = document.getElementById('slider');
-
-    noUiSlider.create(slider, {
-        start: 1, // Handle start position
-        step: 1, // Slider moves in increments of '10'
-        connect: 'lower',
-        range: { // Slider can select '0' to '100'
-            'min': 1,
-            'max': 5
-        }
-    });
-
-    var tipHandles = slider.getElementsByClassName('noUi-handle'),
-        tooltips = [];console.log(tooltips);
-
-    // Add divs to the slider handles.
-    for ( var i = 0; i < tipHandles.length; i++ ){
-        tooltips[i] = document.createElement('div');
-        tipHandles[i].appendChild(tooltips[i]);
-    }
-    console.log(tooltips);
-    // Add a class for styling
-    tooltips[0].className += 'tooltip';
-// Add additional markup
-    tooltips[0].innerHTML = '<span></span>';
-// Replace the tooltip reference with the span we just added
-    tooltips[0] = tooltips[0].getElementsByTagName('span')[0];
-
-// When the slider changes, write the value to the tooltips.
-    slider.noUiSlider.on('update', function( values, handle ){
-        tooltips[handle].innerHTML =  parseInt(values[handle]);
-    });
-
+    $scope.feature.score = 3;
 
     // Load PCM
     $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName)
@@ -73,10 +41,12 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
         pcm.products.array.forEach(function (product) {
             $scope.cells.push({
                 name: "prod_" + product.name,
-                product : product.name
+                product : product.name,
+                evaluated: false
             });
         });
-        });
+
+    });
 
     $scope.send = function() {
 
@@ -109,23 +79,68 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
 
     $scope.previous = function() {
         $scope.index--;
-        embedService.goToCell($scope.index-1, 2);
+        embedService.goToCell($scope.index, 2);
     };
 
     $scope.next = function() {
-        embedService.goToCell($scope.index, 2);
-        $scope.index++;
+        if($scope.index == 9) {
+            var firstUnevaluatedProduct = $scope.getFirstUnevaluatedProduct();
+            if(firstUnevaluatedProduct) {
+                embedService.goToCell(firstUnevaluatedProduct, 2);
+            }
+        }
+        else {
+            $scope.index++;
+            embedService.goToCell($scope.index, 2);
+        }
     };
 
     $scope.getSelected = function(cell) {
         return cell.name == $scope.selected;
     };
 
+    $scope.getIndex = function(product) {
+        var found = false;
+        var i = 0;
+        while($scope.cells && !found) {
+            if($scope.cells[i].name == product) {
+                found = true;
+                break;
+            }
+            i++;
+        }
+        return i;
+    };
+
+    $scope.getFirstUnevaluatedProduct = function(){
+        var found = false;
+        var i = 0;
+        while(i < $scope.cells.length && !found) {
+            if($scope.cells[i] && $scope.cells[i].evaluated == false) {
+                found = true;
+                break;
+            }
+            i++;
+        }
+        if(found) {
+            return i;
+        }
+        else{
+            return false;
+        }
+    };
+
     $scope.$on('selection', function(event, product, feature, cell) {
         $scope.selected = "prod_"+product;
+        $scope.index =  $scope.getIndex($scope.selected);console.log($scope.index);
+        if($scope.index == 0) {
+            embedService.goToCell(0, 2); // First focus on the grid is automatically set on the first row, only way found.
+        }
     });
 
     $scope.$watch('matrixForm.$valid', function(newVal, oldVal) {
-        console.log(newVal);
+        if($scope.selected) {
+            $scope.cells[$scope.getIndex($scope.selected)].evaluated = true;
+        }
     });
 });

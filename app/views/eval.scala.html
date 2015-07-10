@@ -15,112 +15,116 @@
 
         <div class="row">
 
-            <div class="col-md-5">
-                <div class="row" ng-controller="EditorSelectionCtrl">
-                    <h4>PCM</h4>
-                    <div ng-controller="EditorCtrl" open-compare-editor>
+            <div class="col-md-6" ng-controller="EditorSelectionCtrl" style="height: 100%">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>PCM</h4>
+                    </div>
+
+                    <div class="panel-body" ng-controller="EditorCtrl" open-compare-editor>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6 col-md-offset-1">
-                <form name="matrixForm" class="form-horizontal">
-                    <fieldset>
-                        <legend>Evaluation</legend>
-                        <br />
-                    <!-- Feature -->
-                        <div class="form-group" ng-show="index == 0">
-                            <label for="feature">Feature:</label>
-                            <div class="form-group subFormGroup">
-                                <div class="radio" name="feature">
+            <div class="col-md-6" style="height: 100%">
+                <div class="panel panel-default ">
+                    <div class="panel-heading">
+                        <h4>Evaluation</h4>
+                    </div>
+
+                    <form name="matrixForm" class="panel-body">
+                            <br />
+                        <!-- Feature -->
+                            <div class="form-group">
+                                <label for="feature">Feature:</label>
+                                <div class="form-group subFormGroup">
+                                    <div class="radio" name="feature">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="feature" ng-model="feature.eval" value="wellformed" required> Well formed
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" required> Not meaningful
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" required> Irrelevant
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="feature" ng-model="feature.eval" value="redundant" required> Redundant
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-inline subFormGroup" ng-show="feature.eval != 'wellformed'">
+                                    <label for="featureCorrection" class="subLabel" ng-model="feature.correct">Correct value: </label>
+                                    <input name="featureCorrection"  class="form-control" type="text"/>
+                                </div>
+                                <br/>
+                                <div class="form-inline subFormGroup">
+                                    <label for="score" class="subLabel" style="color: #009688">Score: <b>{{feature.score}}</b></label>
+                                    <div slider id="slider" ng-model="feature.score" start=1 end=5 name="score" class="slider shor col-lg-6"></div>
+                                </div>
+                                <br/>
+                            </div>
+
+                        <!-- Cells -->
+                        <div class="form-group" ng-repeat="cell in cells | filter:getSelected" id="{{cell.name}}">
+                            <label for="feature">Product {{cell.product}}:</label>
+                            <br />
+                            <div class="fromGroup subFormGroup">
+                                <label for="featureValue" class="subLabel">Value:</label>
+                                <div class="radio" name="featureValue">
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="wellformed" required> Well formed
+                                        <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="correct" required> Correct
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" required> Not meaningful
+                                        <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incorrect" required> Incorrect
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" required> Irrelevant
+                                        <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incomplete" required> Incomplete
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="redundant" required> Redundant
+                                        <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="missing" required> Missing
                                     </label>
                                 </div>
                             </div>
-                            <div class="form-inline subFormGroup" ng-show="feature.eval != 'wellformed'">
+                            <div class="form-inline subFormGroup" ng-show="cell.eval != 'correct'">
                                 <label for="featureCorrection" class="subLabel">Correct value: </label>
-                                <input name="featureCorrection"  class="form-control" type="text"/>
+                                <input name="featureCorrection" class="form-control" type="text"/>
                             </div>
-                            <br/>
-                            <div class="form-inline subFormGroup">
-                                <label for="score" class="subLabel">Score</label>
-                                <div id="slider" name="score" class="slider shor col-lg-6"></div>
-                            </div>
-                            <br/>
-                        </div>
-
-                    <!-- Cells -->
-                    <div class="form-group" ng-repeat="cell in cells | filter:getSelected" id="{{cell.name}}">
-                        <label for="feature">Product {{cell.product}}:</label>
-                        <br />
-                        <div class="fromGroup subFormGroup">
-                            <label for="featureValue" class="subLabel">Value:</label>
-                            <div class="radio" name="featureValue">
-                                <label class="radio-inline">
-                                    <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="correct" required> Correct
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incorrect" required> Incorrect
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incomplete" required> Incomplete
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="missing" required> Missing
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-inline subFormGroup" ng-show="cell.eval != 'correct'">
-                            <label for="featureCorrection" class="subLabel">Correct value: </label>
-                            <input name="featureCorrection" class="form-control" type="text"/>
-                        </div>
-                        <br />
-                        <div class="form-group subFormGroup">
-                            <label for="overVsSpec" class="subLabel">Overview VS Specification:</label>
-                            <div class="radio" name="overVsSpec">
-                                <label class="radio-inline">
-                                    <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" required> Over = Spec
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="overInSpec" value="overInSpec" required> Over < Spec
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specInOver" value="specInOver" required> Over > Spec
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="incomparable" value="incomparable" required> Incomparable
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                        <div class="col-lg-offset-3">
-                            <button class="btn btn-primary" ng-click="previous()" ng-disabled="index <= 0"><i class="fa fa-chevron-left"></i></button>
-                            <i>{{index}}/10</i>
-                            <button class="btn btn-primary" ng-click="next()" ng-disabled="!matrixForm.$valid || index >= 10"><i class="fa fa-chevron-right"></i></button>
                             <br />
+                            <div class="form-group subFormGroup">
+                                <label for="overVsSpec" class="subLabel">Overview VS Specification:</label>
+                                <div class="radio" name="overVsSpec">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" required> Over = Spec
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="overInSpec" value="overInSpec" required> Over < Spec
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specInOver" value="specInOver" required> Over > Spec
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="incomparable" value="incomparable" required> Incomparable
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-offset-8">
-                        <button class="btn btn-primary" ng-click="send()" ng-disabled="index != 10">Send</button>
-                        </div>
-
-                    </fieldset>
-                </form>
+                            <div class="col-lg-offset-3">
+                                <button class="btn btn-primary" ng-click="previous()" ng-disabled="index <= 0"><i class="fa fa-chevron-left"></i></button>
+                                <i>{{index+1}}/10</i>
+                                <button class="btn btn-primary" ng-click="next()" ng-disabled="!matrixForm.$valid || index >= 10"><i class="fa fa-chevron-right"></i></button>
+                                <br />
+                            </div>
+                            <div class="col-lg-offset-8">
+                            <button class="btn btn-primary" ng-click="send()" ng-disabled="getFirstUnevaluatedProduct()">Send</button>
+                            </div>
+                    </form>
+                </div>
             </div>
-
         </div>
 
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row panel panel-default">
+                <div class="col-md-6 panel-body">
                     <div ng-controller="OverviewController">
                         <h4>Textual overview</h4>
                         <div highlight="text" keywords="keywords" highlight-class="highlight">
@@ -128,7 +132,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 panel-body">
 
                     <div ng-controller="SpecificationController">
                         <h4>Specification</h4>

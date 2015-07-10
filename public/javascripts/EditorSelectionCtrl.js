@@ -9,7 +9,6 @@ matrixMinerApp.controller("EditorSelectionCtrl", function($rootScope, $scope, ex
         var feature = newRowCol.col.name;
         var product = newRowCol.row.entity.name;
         var cell = newRowCol.row.entity[newRowCol.col.name];
-
         $rootScope.$broadcast("selection", product, feature, cell);
     }).addFunction();
 
