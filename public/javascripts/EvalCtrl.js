@@ -21,6 +21,7 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     $scope.index = -1;
     $scope.completed = 0;
     $scope.feature.score = 3;
+    $scope.featureEval = false;
 
     // Load PCM
     $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName)
@@ -83,16 +84,8 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     };
 
     $scope.next = function() {
-        if($scope.index == 9) {
-            var firstUnevaluatedProduct = $scope.getFirstUnevaluatedProduct();
-            if(firstUnevaluatedProduct) {
-                embedService.goToCell(firstUnevaluatedProduct, 2);
-            }
-        }
-        else {
-            $scope.index++;
-            embedService.goToCell($scope.index, 2);
-        }
+        $scope.index++;
+        embedService.goToCell($scope.index, 2);
     };
 
     $scope.getSelected = function(cell) {
@@ -112,24 +105,55 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
         return i;
     };
 
-    $scope.getFirstUnevaluatedProduct = function(){
+    $scope.getNextUnevaluatedProduct = function(){
         var found = false;
-        var i = -1;
-        while(i < $scope.cells.length && !found) {
-            if($scope.cells[i]) {
-                i++;
-                if($scope.cells[i].evaluated == false) {
-                    found = true;
-                    break;
-                }
-            }
-            else{
+        var i = $scope.index+1;
+        while(!found && i < $scope.cells.length) {
+            if($scope.cells[i] && $scope.cells[i].evaluated == false) {
                 found = true;
                 break;
             }
-
+            i++;
         }
-        return i;
+        if(!found) {
+            i = 0;
+           while(!found && i <= $scope.index) {
+                if($scope.cells[i] && $scope.cells[i].evaluated == false) {
+                    found = true;
+                    break;
+                }
+               i++;
+            }
+        }
+        if(found) {
+            return i;
+        }
+        else {
+            return -1;
+        }
+    };
+
+    $scope.setEvaluated = function(type){console.log(type);
+        switch(type) {
+            case 'featureEval':
+                $scope.featureEval = true;
+                break;
+            case 'eval':
+                $scope.cells[$scope.getIndex($scope.selected)].eval = true;
+                break;
+            case 'overVsSpec':
+                $scope.cells[$scope.getIndex($scope.selected)].overVsSpec = true;
+                break;
+        }
+
+    };
+
+    $scope.checkValidation = function() {
+        var valid = $scope.featureEval;
+        for(var i = 0; valid && i < $scope.cells.length; i++) {
+            valid = $scope.cells[i].eval && $scope.cells[i].overVsSpec;
+        }
+        return valid;
     };
 
     $scope.$on('selection', function(event, product, feature, cell) {
@@ -140,9 +164,9 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
         }
     });
 
-    $scope.$watch('matrixForm.$valid', function(newVal, oldVal) {
+    $scope.$watch('matrixForm.$valid', function(newVal, oldVal) { console.log(newVal);
         if($scope.selected) {
-            $scope.cells[$scope.getIndex($scope.selected)].evaluated = true;
+            $scope.cells[$scope.getIndex($scope.selected)].evaluated = true; console.log($scope.cells[$scope.getIndex($scope.selected)]);
         }
     });
 });
