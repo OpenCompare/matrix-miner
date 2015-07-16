@@ -257,6 +257,8 @@ class Application extends Controller {
     val decodedDirPath = new URI(dirPath).getPath
     val pcmPath = decodedDirPath + "/finalPCM.csv"
 
+    Logger.info("loading : " + pcmPath)
+
     if (new File(pcmPath).exists()) {
       Ok(loadPCM(decodedDirPath, Some(evaluatedFeatureName)))
     } else {
