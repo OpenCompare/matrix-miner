@@ -3,7 +3,7 @@
  */
 
 
-matrixMinerApp.controller("SpecificationController", function($rootScope, $scope, $http) {
+matrixMinerApp.controller("SpecificationController", function($rootScope, $scope) {
 
     $scope.specifications = {};
     $scope.specification = [];

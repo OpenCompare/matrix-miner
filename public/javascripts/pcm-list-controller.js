@@ -1,5 +1,5 @@
 
-matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $http, embedService) {
+matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $http, embedService, expandeditor) {
 
     $scope.datasets = [];
     $scope.categories = [];
@@ -52,6 +52,14 @@ matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $htt
             embedService.initialize(data);
             $rootScope.$broadcast("overviews", data.overviews);
             $rootScope.$broadcast("specifications", data.specifications);
+
+            expandeditor.expandNavigateFunctions(function(newRowCol, oldRowCol) {
+                var feature = newRowCol.col.name;
+                var product = newRowCol.row.entity.name;
+                var cell = newRowCol.row.entity[newRowCol.col.name];
+                $rootScope.$broadcast("selection", product, feature, cell);
+                console.log("broadcasting selection");
+            }).addFunction();
         });
     };
 
