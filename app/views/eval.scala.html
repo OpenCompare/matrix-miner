@@ -89,13 +89,13 @@
                                         <input type="radio" name="feature" ng-model="feature.eval" value="wellformed" ng-change="setEvaluated('featureEval')"> Well formed
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" ng-change="setEvaluated()"> Not meaningful
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" ng-change="setEvaluated('featureEval')"> Not meaningful
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" ng-change="setEvaluated()"> Irrelevant
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" ng-change="setEvaluated('featureEval')"> Irrelevant
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="redundant" ng-change="setEvaluated()"> Redundant
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="redundant" ng-change="setEvaluated('featureEval')"> Redundant
                                     </label>
                                 </div>
                             </div>
@@ -108,16 +108,16 @@
                                 <label for="overVsSpecF" class="subLabel">Overview VS Specification:</label>
                                 <div class="radio" name="overVsSpecF">
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated()"> Over = Spec
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated('featureOverVsSpec')"> Over = Spec
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated()"> Over < Spec
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated('featureOverVsSpec')"> Over < Spec
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated()"> Over > Spec
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated('featureOverVsSpec')"> Over > Spec
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated()"> Incomparable
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated('featureOverVsSpec')"> Incomparable
                                     </label>
                                 </div>
                             </div>
@@ -133,16 +133,16 @@
                                     <label for="featureValue" class="subLabel">Value:</label>
                                     <div class="radio" name="featureValue">
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="correct" ng-change="setEvaluated(cell)"> Correct
+                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="correct" ng-change="setEvaluated('eval')"> Correct
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incorrect" ng-change="setEvaluated()"> Incorrect
+                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incorrect" ng-change="setEvaluated('eval')"> Incorrect
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incomplete" ng-change="setEvaluated()"> Incomplete
+                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incomplete" ng-change="setEvaluated('eval')"> Incomplete
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="missing" ng-change="setEvaluated()"> Missing
+                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="missing" ng-change="setEvaluated('eval')"> Missing
                                         </label>
                                     </div>
                                 </div>
@@ -155,16 +155,16 @@
                                     <label for="overVsSpec" class="subLabel">Overview VS Specification:</label>
                                     <div class="radio" name="overVsSpec">
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated()"> Over = Spec
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated('overVsSpec')"> Over = Spec
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated()"> Over < Spec
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated('overVsSpec')"> Over < Spec
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated()"> Over > Spec
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated('overVsSpec')"> Over > Spec
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated()"> Incomparable
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated('overVsSpec')"> Incomparable
                                         </label>
                                     </div>
                                 </div>

@@ -22,6 +22,7 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     $scope.maxIndex = 9;
     $scope.completed = 0;
     $scope.featureEval = false;
+    $scope.featureOverVsSpec = false;
 
     // Load PCM
     $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName)
@@ -140,6 +141,9 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
             case 'featureEval':
                 $scope.featureEval = true;
                 break;
+            case 'featureOverVsSpec':
+                $scope.featureOverVsSpec = true;
+                break;
             case 'eval':
                 $scope.cells[$scope.getIndex($scope.selected)].checkEval = true;
                 break;
@@ -151,7 +155,7 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     };
 
     $scope.checkValidation = function() {
-        var valid = $scope.featureEval;
+        var valid = $scope.featureEval && $scope.featureOverVsSpec;
         for(var i = 0; valid && i < $scope.cells.length; i++) {console.log($scope.cells[i]);
             valid = $scope.cells[i].checkEval && $scope.cells[i].checkOverVsSpec;
         }
