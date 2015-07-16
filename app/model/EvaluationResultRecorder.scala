@@ -38,12 +38,15 @@ class EvaluationResultRecorder {
 //      val decodedFeatureName = new String(base64Decoder.decode(featureName))
 
       val eval = feature.get("eval").toString
+      val score = feature.get("score").toString
+      val correctValueOption = Option(feature.get("correct").asInstanceOf[String])
+      val correctValue = correctValueOption.getOrElse("")
 
-      List(pcmName, featureName, eval)
+      List(pcmName, featureName, eval, score, correctValue)
 
     }).toList
 
-    List("pcm", "feature name", "evaluation") :: results
+    List("pcm", "feature name", "evaluation", "score", "correct value") :: results
   }
 
   def getCellResults() : List[List[String]] = {
@@ -60,19 +63,19 @@ class EvaluationResultRecorder {
       val cellResults = for (dbCell <- cells) yield {
         val cell = dbCell.asInstanceOf[DBObject]
 
-        Logger.info(cell.toString)
-
         val productName = cell.get("product").toString
 
         val eval = cell.get("eval").toString
+        val correctValueOption = Option(cell.get("correct").asInstanceOf[String])
+        val correctValue = correctValueOption.getOrElse("")
         val overVsSpec = cell.get("overVsSpec").toString
 
-        List(pcmName, featureName, productName, eval, overVsSpec)
+        List(pcmName, featureName, productName, eval, correctValue, overVsSpec)
       }
       cellResults
     }).toList.flatten
 
-    List("pcm", "feature name", "product name", "eval", "overVsSpec") :: results
+    List("pcm", "feature name", "product name", "eval", "correct value", "overVsSpec") :: results
   }
 
 }

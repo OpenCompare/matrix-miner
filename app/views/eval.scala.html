@@ -15,7 +15,7 @@
 
         <div class="row">
 
-            <div class="col-md-6" ng-controller="EditorSelectionCtrl" style="height: 100%">
+            <div class="col-sm-6" ng-controller="EditorSelectionCtrl" style="height: 100%">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4>PCM</h4>
@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6" style="height: 100%">
+            <div class="col-sm-6" style="height: 100%">
                 <div class="panel panel-default ">
                     <div class="panel-heading">
                         <h4>Evaluation</h4>
@@ -54,8 +54,8 @@
                                     </div>
                                 </div>
                                 <div class="form-inline subFormGroup" ng-show="feature.eval != 'wellformed'">
-                                    <label for="featureCorrection" class="subLabel" ng-model="feature.correct">Correct value: </label>
-                                    <input name="featureCorrection"  class="form-control" type="text"/>
+                                    <label for="featureCorrection" class="subLabel" >Correct value: </label>
+                                    <input name="featureCorrection"  class="form-control" ng-model="feature.correct" type="text"/>
                                 </div>
                                 <br/>
                                 <div class="form-inline subFormGroup">
@@ -89,7 +89,7 @@
                                 </div>
                                 <div class="form-inline subFormGroup" ng-show="cell.eval != 'correct'">
                                     <label for="featureCorrection" class="subLabel">Correct value: </label>
-                                    <input name="featureCorrection" class="form-control" type="text"/>
+                                    <input name="featureCorrection" class="form-control" type="text" ng-model="cell.correct"/>
                                 </div>
                                 <br />
                                 <div class="form-group subFormGroup">
@@ -126,7 +126,7 @@
         </div>
 
             <div class="row panel panel-default">
-                <div class="col-md-6 panel-body">
+                <div class="col-sm-6 panel-body">
                     <div ng-controller="OverviewController">
                         <h4>Textual overview</h4>
                         <div highlight="text" keywords="keywords" highlight-class="highlight">
@@ -134,7 +134,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 panel-body">
+                <div class="col-sm-6 panel-body">
 
                     <div ng-controller="SpecificationController">
                         <h4>Specification</h4>
