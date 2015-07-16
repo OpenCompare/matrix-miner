@@ -11,12 +11,47 @@
         <div class="row panel panel-default">
 
             <div class="panel-body">
-                <div class="col-sm-10">
+                <div class="col-sm-8">
                     <h4>Instructions</h4>
-                    <p>Go Carambar !</p>
+                    <p>
+                        We want to evaluate PCMs extracted from informal product descriptions (overviews).
+                        To this end, MatrixMiner provides ways to visualize the PCM with a traceability with the original product descriptions (at the left) and the technical specification (at the right).
+                        We display one column at a time and you have to attribute scores for the feature and cell values.
+                        <br/>
+                        Please follow these instructions:
+                    </p>
+
+                    <strong>Feature:</strong>
+                    <ul>
+                        <li>look at each feature in the PCM and state whether the feature is : well formed, not meaningful, irrelevant or redundant. You can also edit the feature.</li>
+                        <li>
+                            specify whether for this feature, the overlap of the overview or the specification is bigger, or the features are incomparable.<br/>
+                            Note: for each cell value, the corresponding product overview is  depicted with the highlight of the feature name and value in the text.
+                        </li>
+                    </ul>
+
+                    <strong>Cell values:</strong>
+                    <ul>
+                        <li>look at each cell value in the PCM and state whether the expected cell value is correct, incorrect, incomplete or missing. You can also edit the cell value.</li>
+                        <li>
+                            specify for each cell value if the overlap of the overview or the specification is bigger; or the cell values are incomparable.<br/>
+                            Note: for each cell value, the corresponding specification is depicted.
+                        </li>
+
+                    </ul>
+
+                    <strong>Column:</strong>
+                    <ul>
+                        <li>
+                            look at each column in the PCM and provide an overall rating for the column as a whole.<br/>
+                            A score of 5 means that the column is cohesive, while a score of 1 means that the group is not meaningful at all.<br/>
+                            Incoherent or not cohesive columns means that all cell values belong together in this column.
+                        </li>
+                    </ul>
+
                 </div>
 
-                <div class="col-sm-2">
+                <div class="col-sm-2 col-sm-offset-2 ">
                     <h4>Evaluation results</h4>
                     <a class="btn btn-default" href="/eval/results/features.csv">Features</a>
                     <a class="btn btn-default" href="/eval/results/cells.csv">Cells</a>
