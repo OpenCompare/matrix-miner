@@ -40,7 +40,7 @@ class Application extends Controller {
   }
 
   def listFeaturesToEvaluate() : List[(Path, String)] = {
-    val datasetPath = Paths.get(datasetDir)
+    val datasetPath = Paths.get(datasetDir + "manual-dataset")
 
     val allFeaturesToEvaluate = for (path <- Files.walk(datasetPath).collect(Collectors.toList()) if path.endsWith("finalPCM.csv")) yield {
       val dir = path.getParent
