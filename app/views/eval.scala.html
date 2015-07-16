@@ -124,8 +124,8 @@
                         </div>
                         <div class="col-lg-offset-3">
                             <button class="btn btn-primary" ng-click="previous()" ng-disabled="index <= 0"><i class="fa fa-chevron-left"></i></button>
-                            <i>{{index+1}}/10</i>
-                            <button class="btn btn-primary" ng-click="next()" ng-disabled="index >= 10"><i class="fa fa-chevron-right"></i></button>
+                            <i>{{index+1}}/{{maxIndex + 1}}</i>
+                            <button class="btn btn-primary" ng-click="next()" ng-disabled="index >= maxIndex"><i class="fa fa-chevron-right"></i></button>
                             <br />
                         </div>
                         <div class="col-lg-offset-8">
