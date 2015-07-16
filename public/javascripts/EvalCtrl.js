@@ -19,35 +19,37 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     $scope.cells = [];
     $scope.selected = '';
     $scope.index = -1;
+    $scope.maxIndex = 9;
     $scope.completed = 0;
-    $scope.feature.score = 3;
     $scope.featureEval = false;
 
     // Load PCM
     $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName)
         .success(function (data) {
-        // Initialize other controllers
-        embedService.initialize({
-            pcm: data.pcm
-        }); // TODO : display only the necessary feature
-        $rootScope.$broadcast("overviews", data.overviews);
-        $rootScope.$broadcast("specifications", data.specifications);
+            // Initialize other controllers
+            embedService.initialize({
+                pcm: data.pcm
+            }); // TODO : display only the necessary feature
+            $rootScope.$broadcast("overviews", data.overviews);
+            $rootScope.$broadcast("specifications", data.specifications);
 
-        // Prepare evaluation
-        var pcm = loader.loadModelFromString(JSON.stringify(data.pcm)).array[0];
-        pcmApi.decodePCM(pcm);
-        var evaluatedFeature = pcm.features.array[0];
-        $scope.feature.name = evaluatedFeature.name;
+            // Prepare evaluation
+            var pcm = loader.loadModelFromString(JSON.stringify(data.pcm)).array[0];
+            pcmApi.decodePCM(pcm);
+            var evaluatedFeature = pcm.features.array[0];
+            $scope.feature.name = evaluatedFeature.name;
 
-        pcm.products.array.forEach(function (product) {
-            $scope.cells.push({
-                name: "prod_" + product.name,
-                product : product.name,
-                evaluated: false
+            pcm.products.array.forEach(function (product) {
+                $scope.cells.push({
+                    name: "prod_" + product.name,
+                    product : product.name,
+                    evaluated: false
+                });
             });
-        });
 
-    });
+            $scope.maxIndex = pcm.products.array.length - 1
+
+        });
 
     $scope.send = function() {
 

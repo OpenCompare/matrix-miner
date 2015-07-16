@@ -8,14 +8,60 @@
 
     <div ng-controller="EvalCtrl" class="container-fluid">
 
-        <div class="row">
-            <h4>Instructions</h4>
+        <div class="row panel panel-default">
 
+            <div class="panel-body">
+                <div class="col-sm-8">
+                    <h4>Instructions</h4>
+                    <p>
+                        We want to evaluate PCMs extracted from informal product descriptions (overviews).
+                        To this end, MatrixMiner provides ways to visualize the PCM with a traceability with the original product descriptions (at the left) and the technical specification (at the right).
+                        We display one column at a time and you have to attribute scores for the feature and cell values.
+                        <br/>
+                        Please follow these instructions:
+                    </p>
+
+                    <strong>Feature:</strong>
+                    <ul>
+                        <li>look at each feature in the PCM and state whether the feature is : well formed, not meaningful, irrelevant or redundant. You can also edit the feature.</li>
+                        <li>
+                            specify whether for this feature, the overlap of the overview or the specification is bigger, or the features are incomparable.<br/>
+                            Note: for each cell value, the corresponding product overview is  depicted with the highlight of the feature name and value in the text.
+                        </li>
+                    </ul>
+
+                    <strong>Cell values:</strong>
+                    <ul>
+                        <li>look at each cell value in the PCM and state whether the expected cell value is correct, incorrect, incomplete or missing. You can also edit the cell value.</li>
+                        <li>
+                            specify for each cell value if the overlap of the overview or the specification is bigger; or the cell values are incomparable.<br/>
+                            Note: for each cell value, the corresponding specification is depicted.
+                        </li>
+
+                    </ul>
+
+                    <strong>Column:</strong>
+                    <ul>
+                        <li>
+                            look at each column in the PCM and provide an overall rating for the column as a whole.<br/>
+                            A score of 5 means that the column is cohesive, while a score of 1 means that the group is not meaningful at all.<br/>
+                            Incoherent or not cohesive columns means that all cell values belong together in this column.
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="col-sm-4 ">
+                    <h4>Evaluation results</h4>
+                    <a class="btn btn-default" href="/eval/results/features.csv">Features</a>
+                    <a class="btn btn-default" href="/eval/results/cells.csv">Cells</a>
+                </div>
+            </div>
         </div>
 
         <div class="row">
 
-            <div class="col-md-6" ng-controller="EditorSelectionCtrl" style="height: 100%">
+            <div class="col-sm-6" ng-controller="EditorSelectionCtrl" style="height: 100%">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4>PCM</h4>
@@ -26,95 +72,108 @@
                 </div>
             </div>
 
-            <div class="col-md-6" style="height: 100%">
+            <div class="col-sm-6" style="height: 100%">
                 <div class="panel panel-default ">
                     <div class="panel-heading">
                         <h4>Evaluation</h4>
                     </div>
 
                     <form name="matrixForm" class="panel-body">
-                            <br />
-                        <!-- Feature -->
-                            <div class="form-group">
-                                <label for="feature">Feature:</label>
-                                <div class="form-group subFormGroup">
-                                    <div class="radio" name="feature">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="feature" ng-model="feature.eval" value="wellformed" ng-change="setEvaluated('featureEval')"> Well formed
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" ng-change="setEvaluated('featureEval')"> Not meaningful
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" ng-change="setEvaluated('featureEval')"> Irrelevant
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="feature" ng-model="feature.eval" value="redundant" ng-change="setEvaluated('featureEval')"> Redundant
-                                        </label>
-                                    </div>
+                        <br />
+                            <!-- Feature -->
+                        <div class="form-group">
+                            <label for="feature">Feature:</label>
+                            <div class="form-group subFormGroup">
+                                <div class="radio" name="feature">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="wellformed" ng-change="setEvaluated('featureEval')"> Well formed
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" ng-change="setEvaluated()"> Not meaningful
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" ng-change="setEvaluated()"> Irrelevant
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="redundant" ng-change="setEvaluated()"> Redundant
+                                    </label>
                                 </div>
-                                <div class="form-inline subFormGroup" ng-show="feature.eval != 'wellformed'">
-                                    <label for="featureCorrection" class="subLabel" ng-model="feature.correct">Correct value: </label>
-                                    <input name="featureCorrection"  class="form-control" type="text"/>
-                                </div>
-                                <br/>
-                                <div class="form-inline subFormGroup">
-                                    <label for="score" class="subLabel" style="color: #009688">Score: <b>{{feature.score}}</b></label>
-                                    <div slider id="slider" ng-model="feature.score" start=1 end=5 name="score" class="slider shor col-lg-6"></div>
-                                </div>
-                                <br/>
                             </div>
+                            <div class="form-inline subFormGroup" ng-show="feature.eval != 'wellformed'">
+                                <label for="featureCorrection" class="subLabel" >Correct value: </label>
+                                <input name="featureCorrection"  class="form-control" ng-model="feature.correct" type="text"/>
+                            </div>
+                            <br/>
+                            <div class="form-group subFormGroup">
+                                <label for="overVsSpecF" class="subLabel">Overview VS Specification:</label>
+                                <div class="radio" name="overVsSpecF">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated()"> Over = Spec
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated()"> Over < Spec
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated()"> Over > Spec
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated()"> Incomparable
+                                    </label>
+                                </div>
+                            </div>
+                            <br/>
+                        </div>
 
-                        <!-- Cells -->
+                            <!-- Cells -->
                         <div class="form-group" ng-repeat="cell in cells" id="{{cell.name}}">
                             <div ng-show="cell.name == selected">
-                            <label for="feature">Product {{cell.product}}:</label>
-                            <br />
+                                <label for="feature">Product {{cell.product}}:</label>
+                                <br />
                                 <div class="fromGroup subFormGroup">
                                     <label for="featureValue" class="subLabel">Value:</label>
                                     <div class="radio" name="featureValue">
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="correct" ng-change="setEvaluated('eval')"> Correct
+                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="correct" ng-change="setEvaluated(cell)"> Correct
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incorrect" ng-change="setEvaluated('eval')"> Incorrect
+                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incorrect" ng-change="setEvaluated()"> Incorrect
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incomplete" ng-change="setEvaluated('eval')"> Incomplete
+                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="incomplete" ng-change="setEvaluated()"> Incomplete
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="missing" ng-change="setEvaluated('eval')"> Missing
+                                            <input type="radio" name="{{cell.name}}.eval" ng-model="cell.eval" value="missing" ng-change="setEvaluated()"> Missing
                                         </label>
                                     </div>
                                 </div>
                                 <div class="form-inline subFormGroup" ng-show="cell.eval != 'correct'">
                                     <label for="featureCorrection" class="subLabel">Correct value: </label>
-                                    <input name="featureCorrection" class="form-control" type="text"/>
+                                    <input name="featureCorrection" class="form-control" type="text" ng-model="cell.correct"/>
                                 </div>
                                 <br />
                                 <div class="form-group subFormGroup">
                                     <label for="overVsSpec" class="subLabel">Overview VS Specification:</label>
                                     <div class="radio" name="overVsSpec">
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated('overVsSpec')"> Over = Spec
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated()"> Over = Spec
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated('overVsSpec')"> Over < Spec
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated()"> Over < Spec
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated('overVsSpec')"> Over > Spec
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated()"> Over > Spec
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated('overVsSpec')"> Incomparable
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated()"> Incomparable
                                         </label>
                                     </div>
                                 </div>
-                        </div>
+                            </div>
                         </div>
                         <div class="col-lg-offset-3">
                             <button class="btn btn-primary" ng-click="previous()" ng-disabled="index <= 0"><i class="fa fa-chevron-left"></i></button>
-                            <i>{{index+1}}/10</i>
-                            <button class="btn btn-primary" ng-click="next()" ng-disabled="index >= 9"><i class="fa fa-chevron-right"></i></button>
+                            <i>{{index+1}}/{{maxIndex + 1}}</i>
+                            <button class="btn btn-primary" ng-click="next()" ng-disabled="index >= maxIndex"><i class="fa fa-chevron-right"></i></button>
                             <br />
                         </div>
                         <div class="col-lg-offset-8">
@@ -125,33 +184,32 @@
             </div>
         </div>
 
-            <div class="row panel panel-default">
-                <div class="col-md-6 panel-body">
-                    <div ng-controller="OverviewController">
-                        <h4>Textual overview</h4>
-                        <div highlight="text" keywords="keywords" highlight-class="highlight">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 panel-body">
-
-                    <div ng-controller="SpecificationController">
-                        <h4>Specification</h4>
-                        <table class="table">
-                            <tr>
-                                <th>Feature</th>
-                                <th>Value</th>
-                            </tr>
-                            <tr ng-repeat="row in specification | filter:filterFeature">
-                                <td>{{row.feature}}</td>
-                                <td>{{row.value}}</td>
-                            </tr>
-                        </table>
+        <div class="row panel panel-default">
+            <div class="col-sm-6 panel-body">
+                <div ng-controller="OverviewController">
+                    <h4>Textual overview</h4>
+                    <div highlight="text" keywords="keywords" highlight-class="highlight">
                     </div>
                 </div>
             </div>
 
+            <div class="col-sm-6 panel-body">
+
+                <div ng-controller="SpecificationController">
+                    <h4>Specification</h4>
+                    <table class="table">
+                        <tr>
+                            <th>Feature</th>
+                            <th>Value</th>
+                        </tr>
+                        <tr ng-repeat="row in specification | filter:filterFeature">
+                            <td>{{row.feature}}</td>
+                            <td>{{row.value}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
 
     </div>
 }

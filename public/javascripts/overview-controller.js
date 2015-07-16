@@ -2,7 +2,7 @@
  * Created by gbecan on 6/2/15.
  */
 
-matrixMinerApp.controller("OverviewController", function($rootScope, $scope, $http, expandeditor) {
+matrixMinerApp.controller("OverviewController", function($rootScope, $scope) {
 
     $scope.overviews = {};
 

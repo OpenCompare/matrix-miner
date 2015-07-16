@@ -40,7 +40,7 @@ class Application extends Controller {
   }
 
   def listFeaturesToEvaluate() : List[(Path, String)] = {
-    val datasetPath = Paths.get(datasetDir)
+    val datasetPath = Paths.get(datasetDir + "manual-dataset")
 
     val allFeaturesToEvaluate = for (path <- Files.walk(datasetPath).collect(Collectors.toList()) if path.endsWith("finalPCM.csv")) yield {
       val dir = path.getParent
@@ -256,6 +256,8 @@ class Application extends Controller {
   def loadEval(dirPath : String, evaluatedFeatureName : String) = Action {
     val decodedDirPath = new URI(dirPath).getPath
     val pcmPath = decodedDirPath + "/finalPCM.csv"
+
+    Logger.info("loading : " + pcmPath)
 
     if (new File(pcmPath).exists()) {
       Ok(loadPCM(decodedDirPath, Some(evaluatedFeatureName)))
