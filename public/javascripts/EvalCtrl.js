@@ -139,10 +139,10 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
                 $scope.featureEval = true;
                 break;
             case 'eval':
-                $scope.cells[$scope.getIndex($scope.selected)].eval = true;
+                $scope.cells[$scope.getIndex($scope.selected)].checkEval = true;
                 break;
             case 'overVsSpec':
-                $scope.cells[$scope.getIndex($scope.selected)].overVsSpec = true;
+                $scope.cells[$scope.getIndex($scope.selected)].checkOverVsSpec = true;
                 break;
         }
 
@@ -150,8 +150,8 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
 
     $scope.checkValidation = function() {
         var valid = $scope.featureEval;
-        for(var i = 0; valid && i < $scope.cells.length; i++) {
-            valid = $scope.cells[i].eval && $scope.cells[i].overVsSpec;
+        for(var i = 0; valid && i < $scope.cells.length; i++) {console.log($scope.cells[i]);
+            valid = $scope.cells[i].checkEval && $scope.cells[i].checkOverVsSpec;
         }
         return valid;
     };
