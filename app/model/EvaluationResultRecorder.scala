@@ -38,15 +38,15 @@ class EvaluationResultRecorder {
 //      val decodedFeatureName = new String(base64Decoder.decode(featureName))
 
       val eval = feature.get("eval").toString
-      val score = feature.get("score").toString
       val correctValueOption = Option(feature.get("correct").asInstanceOf[String])
       val correctValue = correctValueOption.getOrElse("")
+      val overVsSpec = feature.get("overVsSpec").toString
 
-      List(pcmName, featureName, eval, score, correctValue)
+      List(pcmName, featureName, eval, correctValue, overVsSpec)
 
     }).toList
 
-    List("pcm", "feature name", "evaluation", "score", "correct value") :: results
+    List("pcm", "feature name", "evaluation", "correct value", "overVsSpec") :: results
   }
 
   def getCellResults() : List[List[String]] = {

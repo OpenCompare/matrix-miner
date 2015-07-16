@@ -104,9 +104,22 @@
                                 <input name="featureCorrection"  class="form-control" ng-model="feature.correct" type="text"/>
                             </div>
                             <br/>
-                            <div class="form-inline subFormGroup">
-                                <label for="score" class="subLabel" style="color: #009688">Score: <b>{{feature.score}}</b></label>
-                                <div slider id="slider" ng-model="feature.score" start=1 end=5 name="score" class="slider shor col-lg-6"></div>
+                            <div class="form-group subFormGroup">
+                                <label for="overVsSpecF" class="subLabel">Overview VS Specification:</label>
+                                <div class="radio" name="overVsSpecF">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated()"> Over = Spec
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated()"> Over < Spec
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated()"> Over > Spec
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated()"> Incomparable
+                                    </label>
+                                </div>
                             </div>
                             <br/>
                         </div>

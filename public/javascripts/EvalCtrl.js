@@ -21,7 +21,6 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     $scope.index = -1;
     $scope.maxIndex = 9;
     $scope.completed = 0;
-    $scope.feature.score = 3;
     $scope.featureEval = false;
 
     // Load PCM
