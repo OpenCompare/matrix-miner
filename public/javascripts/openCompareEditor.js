@@ -952,7 +952,7 @@ pcmApp.controller("InitializerCtrl", function($rootScope, $scope, $http, $timeou
                     return 'warningCell';
                 }
                 else if(rowValue) {
-                    return getCellClass(rowValue[col.name]);
+                    return getCellClass(rowValue[col.name], featureType);
                 }
             },
             cellTooltip: function(row, col) {
@@ -2084,8 +2084,8 @@ pcmApp.service('typeService', function() {
  */
 
 
-    function getCellClass (value) {
-        if(value) {
+    function getCellClass (value, featureType) {
+        if(value && featureType == "boolean") {
             if(value.toLowerCase().indexOf('yes') != -1 || value.toLowerCase().indexOf('oui') != -1) {
                 return 'yesCell';
             }
