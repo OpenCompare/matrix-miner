@@ -44,13 +44,19 @@ class Application extends Controller {
 
     val allFeaturesToEvaluate = for (path <- Files.walk(datasetPath).collect(Collectors.toList()) if path.endsWith("finalPCM.csv")) yield {
       val dir = path.getParent
-      val pcm = csvOverviewLoader.load(Play.getFile(path.toString)).head.getPcm
 
-      val featuresToEvaluateInPCM = for (feature <- pcm.getConcreteFeatures if !isBooleanFeature(feature)) yield {
-        (dir, feature.getName)
+      try {
+        val pcm = csvOverviewLoader.load(Play.getFile(path.toString)).head.getPcm
+
+        val featuresToEvaluateInPCM = for (feature <- pcm.getConcreteFeatures if !isBooleanFeature(feature)) yield {
+          (dir, feature.getName)
+        }
+
+        featuresToEvaluateInPCM
+      } catch {
+        case e : NullPointerException => Nil
       }
 
-      featuresToEvaluateInPCM
     }
 
     allFeaturesToEvaluate.flatten.toList
