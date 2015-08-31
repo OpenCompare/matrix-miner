@@ -1,5 +1,9 @@
 
-matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $http, embedService, expandeditor) {
+matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $http, editorOptions, expandeditor) {
+
+    editorOptions.enableEdit(false).set();
+    editorOptions.enableShare(false).set();
+    editorOptions.enableExport(false).set();
 
     $scope.datasets = [];
     $scope.categories = [];
@@ -46,10 +50,7 @@ matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $htt
             pcm: $scope.selectedPCM
         };
         $http.post("/load", postData).success(function (data) {
-            embedService.enableEdit(false).set();
-            embedService.enableShare(false).set();
-            embedService.enableExport(false).set();
-            embedService.initialize(data);
+            editorOptions.initialize(data);
             $rootScope.$broadcast("overviews", data.overviews);
             $rootScope.$broadcast("specifications", data.specifications);
 

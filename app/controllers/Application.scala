@@ -1,35 +1,32 @@
 package controllers
 
 import java.io.File
-import java.net.{URI, URLDecoder}
-import java.nio.charset.StandardCharsets
-import java.nio.file.{Paths, Path, Files}
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.function.Predicate
+import java.net.URI
+import java.nio.file.{Files, Path, Paths}
 import java.util.stream.Collectors
+import javax.inject.Singleton
 
-import com.sun.xml.internal.bind.api.impl.NameConverter.Standard
 import model.EvaluationResultRecorder
 import org.opencompare.api.java.Feature
 import org.opencompare.api.java.impl.PCMFactoryImpl
 import org.opencompare.api.java.impl.io.KMFJSONExporter
-import org.opencompare.api.java.io.CSVLoader
+import org.opencompare.api.java.io.SimpleCSVLoader
 import play.api.Play.current
 import play.api._
 import play.api.libs.json._
 import play.api.mvc._
-import play.libs.XML
-import collection.JavaConversions._
+
+import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.io.Source
-import scala.util.Random
 
+@Singleton
 class Application extends Controller {
 
   val evaluationResultRecorder = new EvaluationResultRecorder
   val datasetDir = "datasets/"
   val factory = new PCMFactoryImpl
-  val csvOverviewLoader = new CSVLoader(factory, ';', '"', false)
+  val csvOverviewLoader = new SimpleCSVLoader(factory, ';', '"', false)
   val jsonExporter = new KMFJSONExporter
 
   val featuresToEvaluate : List[(Path, String)] = listFeaturesToEvaluate()
@@ -54,7 +51,9 @@ class Application extends Controller {
 
         featuresToEvaluateInPCM
       } catch {
-        case e : NullPointerException => Nil
+        case e : NullPointerException =>
+          Logger.debug("error loading : " + path.toString)
+          Nil
       }
 
     }
