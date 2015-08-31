@@ -219,6 +219,27 @@ class Application extends Controller {
       }
     }
 
+    // Check uniqueness of features and products
+    val productNames = pcm.getProducts.map(_.getName).toList
+    if (productNames.size > productNames.distinct.size) {
+      Logger.debug("product names are not unique")
+    }
+
+    val featureNames = pcm.getConcreteFeatures.map(_.getName)
+    val duplicatedNames = featureNames.groupBy(f => f).filter(_._2.size > 1).map(_._1).toList
+    if (duplicatedNames.nonEmpty) {
+      Logger.debug("feature names are not unique")
+      Logger.debug(duplicatedNames.mkString(","))
+    }
+
+    // Remove duplicated features
+    for (duplicatedName <- duplicatedNames) {
+      val duplicatedFeature = pcm.getConcreteFeatures.find(_.getName == duplicatedName)
+      if (duplicatedFeature.isDefined) {
+        pcm.removeFeature(duplicatedFeature.get)
+      }
+    }
+
     // Export to JSON
     val json = jsonExporter.export(pcmContainer)
     val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
