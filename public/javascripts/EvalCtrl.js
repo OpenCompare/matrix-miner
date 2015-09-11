@@ -2,12 +2,12 @@
  * Created by gbecan on 7/6/15.
  */
 
-matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $window, $timeout, embedService, base64, pcmApi) {
+matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $window, $timeout, editorOptions, editorUtil, base64, pcmApi) {
 
     // Configure OpenCompare editor
-    embedService.enableEdit(false).set();
-    embedService.enableShare(false).set();
-    embedService.enableExport(false).set();
+    editorOptions.enableEdit(false).set();
+    editorOptions.enableShare(false).set();
+    editorOptions.enableExport(false).set();
 
 
     // Init
@@ -28,7 +28,7 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
     $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName)
         .success(function (data) {
             // Initialize other controllers
-            embedService.initialize({
+            editorOptions.initialize({
                 pcm: data.pcm
             }); // TODO : display only the necessary feature
             $rootScope.$broadcast("overviews", data.overviews);
@@ -83,12 +83,12 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
 
     $scope.previous = function() {
         $scope.index--;
-        embedService.goToCell($scope.index, 2);
+        editorUtil.goToCell($scope.index, 2);
     };
 
     $scope.next = function() {
         $scope.index++;
-        embedService.goToCell($scope.index, 2);
+        editorUtil.goToCell($scope.index, 2);
     };
 
     $scope.getSelected = function(cell) {
@@ -166,7 +166,7 @@ matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $windo
         $scope.selected = "prod_"+product;
         $scope.index =  $scope.getIndex($scope.selected);
         if($scope.index == 0) {
-            embedService.goToCell(0, 2); // First focus on the grid is automatically set on the first row, only way found.
+            editorUtil.goToCell(0, 2); // First focus on the grid is automatically set on the first row, only way found.
         }
     });
 
