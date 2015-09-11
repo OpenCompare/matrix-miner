@@ -59,7 +59,7 @@ matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $htt
                 var product = newRowCol.row.entity.name;
                 var cell = newRowCol.row.entity[newRowCol.col.name];
                 $rootScope.$broadcast("selection", product, feature, cell);
-                console.log("broadcasting selection");
+                console.log(feature + ", " + product + " : " + cell);
             }).addFunction();
         });
     };

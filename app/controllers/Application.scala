@@ -245,16 +245,6 @@ class Application extends Controller {
       }
     }
 
-
-    // Reduce size of PCM
-    val originalFeatures = pcm.getConcreteFeatures()
-    for ((feature, index) <- originalFeatures.zipWithIndex) {
-      if (index < (originalFeatures.size() * 0.9)) {
-        pcm.removeFeature(feature)
-      }
-    }
-
-
     // Export to JSON
     val json = jsonExporter.export(pcmContainer)
     val jsonOverviews = JsObject(overviews.toSeq.map(o => o._1 -> JsString(o._2)))
