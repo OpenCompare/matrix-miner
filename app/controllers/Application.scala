@@ -317,4 +317,6 @@ class Application extends Controller {
     Ok(resultsInCSV).as("application/x-download")
   }
 
+  def template(file : String) = Assets.at("/public/templates", file)
+
 }

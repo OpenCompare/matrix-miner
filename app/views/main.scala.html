@@ -10,10 +10,11 @@
         <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.css"))'>
         <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))'>
         <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("ui-grid.min.css"))'>
-        <link rel="stylesheet" href='@routes.WebJarAssets.at(WebJarAssets.locate("material.min.css"))'>
         <link rel="stylesheet" href='@routes.WebJarAssets.at(WebJarAssets.locate("smoothness/jquery-ui.css"))'>
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/openCompareEditor.min.css")">
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <link rel="stylesheet" href='@routes.WebJarAssets.at(WebJarAssets.locate("material.min.css"))'>
+        <link rel="stylesheet" href='@routes.WebJarAssets.at(WebJarAssets.locate("angular-chart.css"))'>
+        <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/main.css")'>
+        <link rel='stylesheet' href='@routes.Assets.versioned("stylesheets/editor.css")'>
 
     </head>
     <body>
@@ -38,7 +39,7 @@
             </div><!-- /.container-fluid -->
         </nav>
 
-        <div class="container-fluid">
+        <div class="container-fluid" ng-controller="I18nCtrl">
 
         @content
 
@@ -47,32 +48,32 @@
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery-ui.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))'></script>
-        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("angular.js"))'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("angular.min.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-translate.min.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-grid.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap.min.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("ui-bootstrap-tpls.min.js"))'></script>
         <script type='text/javascript' src='@routes.Assets.versioned("javascripts/arrive.min.js")'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("material.min.js"))'></script>
-        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/slider.js")'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("src/slider.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-utf8-base64.min.js"))'></script>
-        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/Chart.js")'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("Chart.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("angular-chart.js"))'></script>
-        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/angular-base64-upload.js")'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("dist/angular-base64-upload.min.js"))'></script>
+
+
+        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/opencompare-editor.js")'></script>
 
         <script type='text/javascript' src='@routes.Assets.versioned("javascripts/angular-highlight.js")'></script>
+
 
         <script type='text/javascript' src='@routes.Assets.versioned("javascripts/jquery.nouislider.min.js")'></script>
         <script type='text/javascript' src='@routes.Assets.versioned("javascripts/nouislider.min.js")'></script>
 
-        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/openCompareEditor.js")'></script>
-
-
-
         <script>
-            var matrixMinerApp = angular.module("matrixMinerApp", ['openCompare', 'angular-highlight', 'ab-base64', 'nouislider']);
-            var modalTemplatePath = '@routes.Assets.versioned("editor/templates/")';
+            var matrixMinerApp = angular.module("matrixMinerApp", ['openCompareEditor', 'angular-highlight', 'ab-base64', 'nouislider']);
         </script>
+
 
         <script type='text/javascript' src='@routes.Assets.versioned("javascripts/pcm-list-controller.js")'></script>
         <script type='text/javascript' src="@routes.Assets.versioned("javascripts/overview-controller.js")"></script>
@@ -80,6 +81,8 @@
 
         <script type='text/javascript' src="@routes.Assets.versioned("javascripts/EvalCtrl.js")"></script>
         <script type='text/javascript' src="@routes.Assets.versioned("javascripts/EditorSelectionCtrl.js")"></script>
+
+        <script type='text/javascript' src="@routes.Assets.versioned("javascripts/I18nCtrl.js")"></script>
 
 
     </body>
