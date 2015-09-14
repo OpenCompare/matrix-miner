@@ -46,7 +46,7 @@ class Application extends Controller {
         val pcm = csvOverviewLoader.load(Play.getFile(path.toString)).head.getPcm
 
         val featuresToEvaluateInPCM = for (feature <- pcm.getConcreteFeatures if !isBooleanFeature(feature)) yield {
-          (dir, feature.getName)
+          (dir, feature.getName, feature.getCells.count(_.getContent.nonEmpty))
         }
 
         featuresToEvaluateInPCM
@@ -58,7 +58,10 @@ class Application extends Controller {
 
     }
 
-    allFeaturesToEvaluate.flatten.toList
+    val result = allFeaturesToEvaluate.flatten.toList
+    val sortedResult = result.sortBy(_._3).reverse
+
+    sortedResult.map(e => (e._1, e._2))
   }
 
   def index = Action {
