@@ -3,7 +3,9 @@
  */
 
 
-matrixMinerApp.controller("EditorSelectionCtrl", function($rootScope, $scope, expandeditor) {
+angular
+    .module("matrixMinerApp")
+    .controller("EditorSelectionCtrl", function($rootScope, $scope, expandeditor) {
 
     expandeditor.expandNavigateFunctions(function(newRowCol, oldRowCol) {
         var feature = newRowCol.col.name;

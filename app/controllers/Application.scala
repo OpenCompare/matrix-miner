@@ -33,7 +33,7 @@ class Application extends Controller {
   var indexFeatureToEvaluate = 0
 
   def isBooleanFeature(feature : Feature) : Boolean = {
-    feature.getCells.forall(c => Set("yes", "no").contains(c.getContent.toLowerCase))
+    feature.getCells.exists(c => Set("yes", "no").contains(c.getContent.toLowerCase)) // forall replaced by exists
   }
 
   def listFeaturesToEvaluate() : List[(Path, String)] = {
@@ -180,13 +180,16 @@ class Application extends Controller {
 
     // Treat XML dumps
     val overviews = bestbuyXML.map { o =>
-      val features = o._2.map(xml => xml \ "features" \ "feature").head
+      val description = (o._2 \ "longDescription").text
+      val features = o._2 \ "features" \ "feature"
 
-      val overview = features.map { node =>
+      val overview = description + "<br/>" +
+        features.map { node =>
         val text = node.text
         "<strong>" + text.replaceFirst("\n", "</strong><br/>")
-      }
-      (o._1, overview.mkString("<br/>"))
+      }.mkString("<br/>")
+
+      (o._1, overview)
     }
 
     val specifications = bestbuyXML.map { bbXML =>

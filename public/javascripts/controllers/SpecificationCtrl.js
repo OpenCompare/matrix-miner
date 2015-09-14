@@ -3,7 +3,9 @@
  */
 
 
-matrixMinerApp.controller("SpecificationController", function($rootScope, $scope) {
+angular
+    .module("matrixMinerApp")
+    .controller("SpecificationController", function($rootScope, $scope) {
 
     $scope.specifications = {};
     $scope.specification = [];

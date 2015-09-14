@@ -1,5 +1,7 @@
 
-matrixMinerApp.controller("PCMListController", function($rootScope, $scope, $http, editorOptions, expandeditor) {
+angular
+    .module("matrixMinerApp")
+    .controller("PCMListController", function($rootScope, $scope, $http, editorOptions, expandeditor) {
 
     editorOptions.enableEdit(false).set();
     editorOptions.enableShare(false).set();

@@ -2,7 +2,9 @@
  * Created by gbecan on 7/6/15.
  */
 
-matrixMinerApp.controller("EvalCtrl", function($rootScope, $scope, $http, $window, $timeout, editorOptions, editorUtil, base64, pcmApi) {
+angular
+    .module("matrixMinerApp")
+    .controller("EvalCtrl", function($rootScope, $scope, $http, $window, $timeout, editorOptions, editorUtil, base64, pcmApi) {
 
     // Configure OpenCompare editor
     editorOptions.enableEdit(false).set();
