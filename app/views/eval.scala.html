@@ -106,16 +106,16 @@
                             </div>
                             <br/>
                             <div class="form-group subFormGroup">
-                                <label for="overVsSpecF" class="subLabel">Overview VS Specification:</label>
+                                <label for="overVsSpecF" class="subLabel">PCM VS Specification:</label>
                                 <div class="radio" name="overVsSpecF">
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated('featureOverVsSpec')"> Over = Spec
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated('featureOverVsSpec')"> PCM = Spec
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated('featureOverVsSpec')"> Over < Spec
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated('featureOverVsSpec')"> PCM < Spec
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated('featureOverVsSpec')"> Over > Spec
+                                        <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated('featureOverVsSpec')"> PCM > Spec
                                     </label>
                                     <label class="radio-inline">
                                         <input type="radio" name="feature.overVsSpec" ng-model="feature.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated('featureOverVsSpec')"> Incomparable
@@ -124,6 +124,8 @@
                             </div>
                             <br/>
                         </div>
+
+                        <hr/>
 
                             <!-- Cells -->
                         <div class="form-group" ng-repeat="cell in cells" id="{{cell.name}}">
@@ -153,16 +155,16 @@
                                 </div>
                                 <br />
                                 <div class="form-group subFormGroup">
-                                    <label for="overVsSpec" class="subLabel">Overview VS Specification:</label>
+                                    <label for="overVsSpec" class="subLabel">PCM VS Specification:</label>
                                     <div class="radio" name="overVsSpec">
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated('overVsSpec')"> Over = Spec
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specEqualOver" value="specEqualOver" ng-change="setEvaluated('overVsSpec')"> PCM = Spec
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated('overVsSpec')"> Over < Spec
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="overInSpec" value="overInSpec" ng-change="setEvaluated('overVsSpec')"> PCM < Spec
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated('overVsSpec')"> Over > Spec
+                                            <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="specInOver" value="specInOver" ng-change="setEvaluated('overVsSpec')"> PCM > Spec
                                         </label>
                                         <label class="radio-inline">
                                             <input type="radio" name="{{cell.name}}.overVsSpec" ng-model="cell.overVsSpec" id="incomparable" value="incomparable" ng-change="setEvaluated('overVsSpec')"> Incomparable
@@ -171,15 +173,28 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-offset-3">
-                            <button class="btn btn-primary" ng-click="previous()" ng-disabled="index <= 0"><i class="fa fa-chevron-left"></i></button>
-                            <i>{{index+1}}/{{maxIndex + 1}}</i>
-                            <button class="btn btn-primary" ng-click="next()" ng-disabled="index >= maxIndex"><i class="fa fa-chevron-right"></i></button>
-                            <br />
+                        <div class="row">
+                            <div class="col-lg-offset-3">
+                                <button class="btn btn-primary" ng-click="previous()" ng-disabled="index <= 0"><i class="fa fa-chevron-left"></i></button>
+                                <i>{{index+1}}/{{maxIndex + 1}}</i>
+                                <button class="btn btn-primary" ng-click="next()" ng-disabled="index >= maxIndex"><i class="fa fa-chevron-right"></i></button>
+                                <br />
+                            </div>
                         </div>
-                        <div class="col-lg-offset-8">
-                            <button class="btn btn-primary" ng-click="send()" ng-disabled="!checkValidation()">Send</button>
+
+                        <hr/>
+
+                        <div class="row">
+                            <label for="comment">Comments</label>
+                            <textarea class="form-control" rows="5" name="comment" ng-model="comment" placeholder="Enter your comments here"> </textarea>
                         </div>
+
+                        <div class="row">
+                            <div class="col-lg-offset-10">
+                                <button class="btn btn-primary" ng-click="send()" ng-disabled="!checkValidation()">Send</button>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
             </div>

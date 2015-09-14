@@ -19,6 +19,7 @@ angular
 
     $scope.feature = {};
     $scope.cells = [];
+    $scope.comment = "";
     $scope.selected = '';
     $scope.index = -1;
     $scope.maxIndex = 9;
@@ -59,7 +60,8 @@ angular
         var evalResults = {
             pcm : dirPath,
             feature : $scope.feature,
-            cells : $scope.cells
+            cells : $scope.cells,
+            comment: $scope.comment
         };
 
         $http.post("/eval/save", evalResults)
