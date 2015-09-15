@@ -292,7 +292,10 @@ class Application extends Controller {
     Logger.info("loading : " + pcmPath)
 
     if (new File(pcmPath).exists()) {
-      Ok(loadPCM(decodedDirPath, Some(evaluatedFeatureName)))
+      Ok(JsObject(Seq(
+        "pcmToEvaluate" -> loadPCM(decodedDirPath, Some(evaluatedFeatureName)),
+        "fullPCM" -> loadPCM(decodedDirPath, None)
+      )))
     } else {
       NotFound("PCM not found")
     }

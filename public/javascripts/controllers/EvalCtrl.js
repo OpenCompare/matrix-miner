@@ -30,15 +30,18 @@ angular
     // Load PCM
     $http.get("/eval/load/" + dirPath + "/" + evaluatedFeatureName)
         .success(function (data) {
+            var pcmToEvaluate = data.pcmToEvaluate;
+            var fullPCM = data.fullPCM;
+
             // Initialize other controllers
             editorOptions.initialize({
-                pcm: data.pcm
+                pcm: pcmToEvaluate.pcm
             });
-            $rootScope.$broadcast("overviews", data.overviews);
-            $rootScope.$broadcast("specifications", data.specifications);
+            $rootScope.$broadcast("overviews", pcmToEvaluate.overviews);
+            $rootScope.$broadcast("specifications", pcmToEvaluate.specifications);
 
             // Prepare evaluation
-            var pcm = loader.loadModelFromString(JSON.stringify(data.pcm)).array[0];
+            var pcm = loader.loadModelFromString(JSON.stringify(pcmToEvaluate.pcm)).array[0];
             pcmApi.decodePCM(pcm);
             var evaluatedFeature = pcm.features.array[0];
             $scope.feature.name = evaluatedFeature.name;
