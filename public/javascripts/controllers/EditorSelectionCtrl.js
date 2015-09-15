@@ -12,6 +12,7 @@ angular
         var product = newRowCol.row.entity.name;
         var cell = newRowCol.row.entity[newRowCol.col.name];
         $rootScope.$broadcast("selection", product, feature, cell);
+        console.log(feature + ", " + product + " : " + cell);
     }).addFunction();
 
 });

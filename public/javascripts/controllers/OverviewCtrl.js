@@ -12,11 +12,13 @@ angular
 
     $scope.$on('selection', function(event, product, feature, cell) {
         $scope.text = $scope.overviews[product];
+
         if (cell === "YES" || cell === "NO" || /^\s*$/.test(cell)) {
             $scope.keywords = feature;
         } else {
             $scope.keywords = feature + ", " + cell;
         }
+
     });
 
     $scope.$on('overviews', function(event, data) {

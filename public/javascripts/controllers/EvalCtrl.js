@@ -33,7 +33,7 @@ angular
             // Initialize other controllers
             editorOptions.initialize({
                 pcm: data.pcm
-            }); // TODO : display only the necessary feature
+            });
             $rootScope.$broadcast("overviews", data.overviews);
             $rootScope.$broadcast("specifications", data.specifications);
 

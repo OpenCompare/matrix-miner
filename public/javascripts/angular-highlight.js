@@ -1,4 +1,5 @@
 angular.module('angular-highlight', []).directive('highlight', function() {
+
 	var component = function(scope, element, attrs) {
 		
 		if (!attrs.highlightClass) {
@@ -19,13 +20,12 @@ angular.module('angular-highlight', []).directive('highlight', function() {
 			return keywords_yop;
 		};
 
-		scope.$watch('keywords', function() {
-			//console.log("scope.keywords",scope.keywords);
+		function update() {
 			if (!scope.keywords || scope.keywords == '') {
 				element.html(scope.highlight);
 				return false;
 			}
-			
+
 
 			var tokenized	= tokenize(scope.keywords);
 			var regex 		= new RegExp(tokenized.join('|'), 'gmi');
@@ -34,6 +34,14 @@ angular.module('angular-highlight', []).directive('highlight', function() {
 			var html = scope.highlight.replace(regex, replacer);
 
 			element.html(html);
+		}
+
+		scope.$watch('keywords', function() {
+			update();
+		});
+
+		scope.$watch('highlight', function() {
+			update();
 		});
 	};
 
