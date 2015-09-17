@@ -60,13 +60,13 @@ angular
 
         });
 
-    $scope.send = function() {
-
+    function sendResults(status) {
         var evalResults = {
             pcm : dirPath,
             feature : $scope.feature,
             cells : $scope.cells,
-            comment: $scope.comment
+            comment: $scope.comment,
+            status: status
         };
 
         $http.post("/eval/save", evalResults)
@@ -76,6 +76,18 @@ angular
             .error(function (data) {
                 console.log("an error occured while sending evaluation results")
             });
+    }
+
+    $scope.send = function() {
+        sendResults("ok");
+    };
+
+    $scope.irrelevant = function() {
+        sendResults("irrelevant");
+    };
+
+    $scope.bad = function() {
+        sendResults("bad")
     };
 
     $scope.allCorrect = function() {

@@ -87,13 +87,13 @@
                             <div class="form-group subFormGroup">
                                 <div class="radio" name="feature">
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="wellformed" ng-change="setEvaluated('featureEval')"> Well formed
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="correct" ng-change="setEvaluated('featureEval')"> Correct
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="notmeaningful" ng-change="setEvaluated('featureEval')"> Not meaningful
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="incorrect" ng-change="setEvaluated('featureEval')"> Incorrect
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" ng-change="setEvaluated('featureEval')"> Irrelevant
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="incomplete" ng-change="setEvaluated('featureEval')"> Incomplete
                                     </label>
                                     <label class="radio-inline">
                                         <input type="radio" name="feature" ng-model="feature.eval" value="redundant" ng-change="setEvaluated('featureEval')"> Redundant
@@ -190,7 +190,9 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-offset-10">
+                            <div style="float:right;">
+                                <button class="btn btn-warning" ng-click="irrelevant()" title="The feature is not a relevant caracteristics of the products.">Irrelevant feature</button>
+                                <button class="btn btn-warning" ng-click="bad()" title="The feature and the values are all incorrect.">Incorrect column</button>
                                 <button class="btn btn-primary" ng-click="send()" ng-disabled="!checkValidation()">Send</button>
                             </div>
                         </div>
@@ -227,11 +229,11 @@
             </div>
         </div>
 
-        <div class="row panel panel-default">
-            <div class="panel-body">
-                <open-compare-editor edit="false" pcm-container="stringFullPCM"></open-compare-editor>
-            </div>
-        </div>
+        @*<div class="row panel panel-default">*@
+            @*<div class="panel-body">*@
+                @*<open-compare-editor edit="false" pcm-container="stringFullPCM"></open-compare-editor>*@
+            @*</div>*@
+        @*</div>*@
 
     </div>
 }
