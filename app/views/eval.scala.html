@@ -68,7 +68,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <open-compare-editor ng-controller="EditorSelectionCtrl"></open-compare-editor>
+                        <open-compare-editor edit="false" pcm-container="stringPCMToEvaluate" ng-controller="EditorSelectionCtrl"></open-compare-editor>
                     </div>
                 </div>
             </div>
@@ -224,6 +224,12 @@
                         </tr>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <div class="row panel panel-default">
+            <div class="panel-body">
+                <open-compare-editor edit="false" pcm-container="stringFullPCM"></open-compare-editor>
             </div>
         </div>
 

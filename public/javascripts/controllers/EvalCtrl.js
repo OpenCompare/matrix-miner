@@ -7,7 +7,6 @@ angular
     .controller("EvalCtrl", function($rootScope, $scope, $http, $window, $timeout, editorOptions, editorUtil, base64, pcmApi) {
 
     // Configure OpenCompare editor
-    editorOptions.enableEdit(false).set();
     editorOptions.enableShare(false).set();
     editorOptions.enableExport(false).set();
 
@@ -33,10 +32,13 @@ angular
             var pcmToEvaluate = data.pcmToEvaluate;
             var fullPCM = data.fullPCM;
 
+            $scope.stringPCMToEvaluate = JSON.stringify(pcmToEvaluate.pcm);
+            $scope.stringFullPCM = JSON.stringify(fullPCM.pcm);
+
             // Initialize other controllers
-            editorOptions.initialize({
-                pcm: pcmToEvaluate.pcm
-            });
+            //editorOptions.initialize({
+            //    pcm: $scope.pcmToEvaluate.pcm
+            //});
             $rootScope.$broadcast("overviews", pcmToEvaluate.overviews);
             $rootScope.$broadcast("specifications", pcmToEvaluate.specifications);
 
