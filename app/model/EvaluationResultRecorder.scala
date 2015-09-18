@@ -31,22 +31,21 @@ class EvaluationResultRecorder {
 
     val results = (for (queryResult <- queryResults) yield {
 
-      val pcmName = queryResult.get("pcm").toString
+      val pcmName = queryResult.getOrElse("pcm", "").asInstanceOf[String]
 
       val feature = queryResult.get("feature").asInstanceOf[DBObject]
-      val featureName = feature.get("name").toString
+      val featureName = feature.getOrElse("name", "").asInstanceOf[String]
 //      val decodedFeatureName = new String(base64Decoder.decode(featureName))
+      val eval = feature.getOrElse("eval", "").asInstanceOf[String]
+      val correctValue = feature.getOrElse("correct", "").asInstanceOf[String]
+      val overVsSpec = feature.getOrElse("overVsSpec", "").asInstanceOf[String]
+      val status = feature.getOrElse("status", "").asInstanceOf[String]
 
-      val eval = feature.get("eval").toString
-      val correctValueOption = Option(feature.get("correct").asInstanceOf[String])
-      val correctValue = correctValueOption.getOrElse("")
-      val overVsSpec = feature.get("overVsSpec").toString
-
-      List(pcmName, featureName, eval, correctValue, overVsSpec)
+      List(pcmName, featureName, eval, correctValue, overVsSpec, status)
 
     }).toList
 
-    List("pcm", "feature name", "evaluation", "correct value", "overVsSpec") :: results
+    List("pcm", "feature name", "evaluation", "correct value", "overVsSpec", "status") :: results
   }
 
   def getCellResults() : List[List[String]] = {
@@ -63,12 +62,10 @@ class EvaluationResultRecorder {
       val cellResults = for (dbCell <- cells) yield {
         val cell = dbCell.asInstanceOf[DBObject]
 
-        val productName = cell.get("product").toString
-
-        val eval = cell.get("eval").toString
-        val correctValueOption = Option(cell.get("correct").asInstanceOf[String])
-        val correctValue = correctValueOption.getOrElse("")
-        val overVsSpec = cell.get("overVsSpec").toString
+        val productName = cell.getOrElse("product", "").asInstanceOf[String]
+        val eval = cell.getOrElse("eval", "").asInstanceOf[String]
+        val correctValue = cell.getOrElse("correct", "").asInstanceOf[String]
+        val overVsSpec = cell.getOrElse("overVsSpec", "").asInstanceOf[String]
 
         List(pcmName, featureName, productName, eval, correctValue, overVsSpec)
       }
