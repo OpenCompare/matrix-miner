@@ -157,7 +157,7 @@ angular
         }
     };
 
-    $scope.setEvaluated = function(type){console.log(type);
+    $scope.setEvaluated = function(type){
         switch(type) {
             case 'featureEval':
                 $scope.featureEval = true;
@@ -176,11 +176,12 @@ angular
     };
 
     $scope.checkValidation = function() {
-        var valid = $scope.featureEval && $scope.featureOverVsSpec;
-        for(var i = 0; valid && i < $scope.cells.length; i++) {console.log($scope.cells[i]);
-            valid = $scope.cells[i].checkEval && $scope.cells[i].checkOverVsSpec;
+        var validIrrelevant = ($scope.feature.eval === 'irrelevant') && $scope.featureOverVsSpec;
+        var validComplete = $scope.featureEval && $scope.featureOverVsSpec;
+        for(var i = 0; validComplete && i < $scope.cells.length; i++) {
+            validComplete = $scope.cells[i].checkEval && $scope.cells[i].checkOverVsSpec;
         }
-        return valid;
+        return validComplete || validIrrelevant;
     };
 
     $scope.$on('selection', function(event, product, feature, cell) {
@@ -191,9 +192,9 @@ angular
         }
     });
 
-    $scope.$watch('matrixForm.$valid', function(newVal, oldVal) { console.log(newVal);
+    $scope.$watch('matrixForm.$valid', function(newVal, oldVal) {
         if($scope.selected) {
-            $scope.cells[$scope.getIndex($scope.selected)].evaluated = true; console.log($scope.cells[$scope.getIndex($scope.selected)]);
+            $scope.cells[$scope.getIndex($scope.selected)].evaluated = true;
         }
     });
 });

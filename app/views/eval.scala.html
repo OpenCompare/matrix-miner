@@ -96,7 +96,7 @@
                                         <input type="radio" name="feature" ng-model="feature.eval" value="incomplete" ng-change="setEvaluated('featureEval')"> Incomplete
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="feature" ng-model="feature.eval" value="redundant" ng-change="setEvaluated('featureEval')"> Redundant
+                                        <input type="radio" name="feature" ng-model="feature.eval" value="irrelevant" ng-change="setEvaluated('featureEval')"> Irrelevant
                                     </label>
                                 </div>
                             </div>
@@ -128,7 +128,7 @@
                         <hr/>
 
                             <!-- Cells -->
-                        <div class="form-group" ng-repeat="cell in cells" id="{{cell.name}}">
+                        <div ng-show="feature.eval != 'irrelevant'" class="form-group" ng-repeat="cell in cells" id="{{cell.name}}">
                             <div ng-show="cell.name == selected">
                                 <label for="feature">Product {{cell.product}}:</label>
                                 <br />
@@ -191,8 +191,6 @@
 
                         <div class="row">
                             <div style="float:right;">
-                                <button class="btn btn-warning" ng-click="irrelevant()" title="The feature is not a relevant caracteristics of the products.">Irrelevant feature</button>
-                                <button class="btn btn-warning" ng-click="bad()" title="The feature and the values are all incorrect.">Incorrect column</button>
                                 <button class="btn btn-primary" ng-click="send()" ng-disabled="!checkValidation()">Send</button>
                             </div>
                         </div>
