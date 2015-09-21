@@ -71,7 +71,11 @@
         <script type='text/javascript' src='@routes.Assets.versioned("javascripts/nouislider.min.js")'></script>
 
         <script>
-            angular.module("matrixMinerApp", ['openCompareEditor', 'angular-highlight', 'ab-base64', 'nouislider']);
+            angular
+            .module("matrixMinerApp", ['openCompareEditor', 'angular-highlight', 'ab-base64', 'nouislider'])
+            .config(function($logProvider) {
+                $logProvider.debugEnabled(false);
+            });
         </script>
 
 

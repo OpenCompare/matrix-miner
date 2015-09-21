@@ -82,13 +82,13 @@ angular
         sendResults("ok");
     };
 
-    $scope.irrelevant = function() {
-        sendResults("irrelevant");
-    };
-
-    $scope.bad = function() {
-        sendResults("bad")
-    };
+    //$scope.irrelevant = function() {
+    //    sendResults("irrelevant");
+    //};
+    //
+    //$scope.bad = function() {
+    //    sendResults("bad")
+    //};
 
     $scope.allCorrect = function() {
         $scope.cells.forEach(function (cell) {

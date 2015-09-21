@@ -39,13 +39,13 @@ class EvaluationResultRecorder {
       val eval = feature.getOrElse("eval", "").asInstanceOf[String]
       val correctValue = feature.getOrElse("correct", "").asInstanceOf[String]
       val overVsSpec = feature.getOrElse("overVsSpec", "").asInstanceOf[String]
-      val status = feature.getOrElse("status", "").asInstanceOf[String]
+//      val status = feature.getOrElse("status", "").asInstanceOf[String]
 
-      List(pcmName, featureName, eval, correctValue, overVsSpec, status)
+      List(pcmName, featureName, eval, correctValue, overVsSpec)
 
     }).toList
 
-    List("pcm", "feature name", "evaluation", "correct value", "overVsSpec", "status") :: results
+    List("pcm", "feature name", "evaluation", "correct value", "overVsSpec") :: results
   }
 
   def getCellResults() : List[List[String]] = {
