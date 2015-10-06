@@ -29,11 +29,21 @@ class Application extends Controller {
   val csvOverviewLoader = new SimpleCSVLoader(factory, ';', '"', false)
   val jsonExporter = new KMFJSONExporter
 
+  val yes = "\\s*yes\\s*".r
+  val no = "\\s*no\\s*".r
+
   val featuresToEvaluate : List[(Path, String)] = listFeaturesToEvaluate()
   var indexFeatureToEvaluate = 0
 
+
+
   def isBooleanFeature(feature : Feature) : Boolean = {
-    feature.getCells.exists(c => Set("yes", "no").contains(c.getContent.toLowerCase)) // forall replaced by exists
+    feature.getCells.exists { c =>
+      val lowerCaseContent = c.getContent.toLowerCase
+      val isYes = yes.findFirstIn(lowerCaseContent).isDefined
+      val isNo = no.findFirstIn(lowerCaseContent).isDefined
+      isYes || isNo
+    }
   }
 
   def listFeaturesToEvaluate() : List[(Path, String)] = {
@@ -52,6 +62,7 @@ class Application extends Controller {
         featuresToEvaluateInPCM
       } catch {
         case e : NullPointerException =>
+          e.printStackTrace()
           Logger.debug("error loading : " + path.toString)
           Nil
       }
