@@ -46,9 +46,9 @@ libraryDependencies ++= Seq(
 
   "org.mongodb" %% "casbah" % "2.8.1",
 
-  "org.opencompare" % "model" % "0.6-SNAPSHOT",
-  "org.opencompare" % "api-java" % "0.6-SNAPSHOT",
-  "org.opencompare" % "api-java-impl" % "0.6-SNAPSHOT",
+  "org.opencompare" % "model" % "0.6",
+  "org.opencompare" % "api-java" % "0.6",
+  "org.opencompare" % "api-java-impl" % "0.6",
 
   jdbc,
   cache,

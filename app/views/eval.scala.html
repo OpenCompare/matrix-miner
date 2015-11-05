@@ -8,57 +8,6 @@
 
     <div ng-controller="EvalCtrl" class="container-fluid">
 
-        <div class="row panel panel-default">
-
-            <div class="panel-heading" ng-click="instructions.visible=!instructions.visible">
-                <h4>Instructions <span ng-hide="instructions.visible">(click to expand)</span></h4>
-            </div>
-
-            <div ng-class="{collapse: !instructions.visible}">
-                <div class="panel-body">
-                    <div class="col-sm-8">
-                        <p>
-                            We want to evaluate PCMs extracted from informal product descriptions (overviews).
-                            We display one column at a time and you have to attribute scores for the feature and cell values.
-                            <br/>
-                            Please follow these instructions:
-                        </p>
-                        <ol>
-                            <li>
-                                You have to validate or not features and cell values in the PCMs against the information contained in the original product overview (at the left).
-                                For each cell value, the corresponding product overview is depicted with the highlight of the feature name and value in the text.
-                                <ul>
-                                    <li>look at each feature in the PCM and state whether the feature is : well formed, not meaningful, irrelevant or redundant. You can also edit the feature</li>
-                                    <li>look at each cell value in the PCM and state whether the expected cell value is correct, incorrect, incomplete or missing. You can also edit the cell value.</li>
-                                    @*<li>look at each column in the PCM and provide an overall rating for the column as a whole.*@
-                                        @*A score of 5 means that the column is cohesive, while a score of 1 means that the group is not meaningful at all.*@
-                                        @*Cohesive (or coherent) columns means that all cell values belong together in this column. </li>*@
-                                </ul>
-                            </li>
-
-                            <li>
-                                Evaluate the overlap between the overview and the specification.
-                                <ul>
-                                    <li>specify whether the overlap of the overview or the specification is bigger for features and cell values (over = spec, over > spec, over < spec).<br/>
-                                        i.e features and cell values in the overview are more/less refined than in the specification.
-                                    </li>
-                                    <li>the information in the overview and the specification are incomparable.</li>
-                                </ul>
-                            </li>
-                        </ol>
-                        <p>Note: the tool offers ways to visualize the PCM with a traceability with the specification. For each cell value, the corresponding specification is depicted including the feature name and cell value.</p>
-
-                    </div>
-
-                    <div class="col-sm-4 ">
-                        <h4>Evaluation results</h4>
-                        <a class="btn btn-default" href="/eval/results/features.csv">Features</a>
-                        <a class="btn btn-default" href="/eval/results/cells.csv">Cells</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
 
             <div class="col-sm-6" style="height: 100%">
@@ -78,6 +27,11 @@
                     <div class="panel-heading">
                         <h4>Evaluation</h4>
                     </div>
+
+                    <div class="text-center">
+                        <a class="btn btn-primary" href="assets/instructions.pdf" target="_blank">Instructions</a>
+                    </div>
+
 
                     <form name="matrixForm" class="panel-body">
                         <br />
@@ -232,6 +186,12 @@
                 @*<open-compare-editor edit="false" pcm-container="stringFullPCM"></open-compare-editor>*@
             @*</div>*@
         @*</div>*@
+
+        <div class="row">
+            <h4>Evaluation results</h4>
+            <a class="btn btn-default" href="/eval/results/features.csv">Features</a>
+            <a class="btn btn-default" href="/eval/results/cells.csv">Cells</a>
+        </div>
 
     </div>
 }
